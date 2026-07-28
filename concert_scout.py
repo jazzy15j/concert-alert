@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import html
+from html.parser import HTMLParser
 import json
 import logging
 import math
@@ -19,6 +20,7 @@ from email.message import EmailMessage
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urlencode
+from urllib.parse import urljoin
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
@@ -223,6 +225,157 @@ class TicketmasterSource:
         return data.get("_embedded", {}).get("events", [])
 
 
+def known_artists_in_title(title: str, artists: Iterable[str]) -> list[str]:
+    normalized_title = f" {normalize_artist(title)} "
+    matches = []
+    for artist in artists:
+        normalized_artist = normalize_artist(artist)
+        if normalized_artist and f" {normalized_artist} " in normalized_title:
+            matches.append(artist)
+    return matches
+
+
+def local_calendar_event(
+    event_id: str,
+    title: str,
+    event_date: str,
+    event_time: str | None,
+    venue: str,
+    city: str,
+    state: str,
+    url: str,
+    artists: Iterable[str],
+    description: str = "",
+    price: str = "",
+) -> dict[str, Any]:
+    attractions = known_artists_in_title(title, artists)
+    genre_text = normalize_artist(f"{title} {description}")
+    subgenre = "Neo-Soul" if "neo soul" in genre_text else "Undefined"
+    price_match = re.search(r"\$\s*(\d+(?:\.\d{1,2})?)", price)
+    result: dict[str, Any] = {
+        "id": event_id,
+        "name": title,
+        "url": url,
+        "dates": {"start": {"localDate": event_date, "localTime": event_time}, "status": {"code": "onsale"}},
+        "classifications": [{"segment": {"name": "Music"}, "genre": {"name": "R&B"}, "subGenre": {"name": subgenre}}],
+        "_embedded": {
+            "attractions": [{"name": artist} for artist in attractions],
+            "venues": [{"name": venue, "city": {"name": city}, "state": {"stateCode": state}}],
+        },
+    }
+    if price_match:
+        amount = float(price_match.group(1))
+        result["priceRanges"] = [{"min": amount, "max": amount, "currency": "USD"}]
+    return result
+
+
+class VisitKearneySource(TicketmasterSource):
+    API = "https://visitkearney.org/wp-json/tribe/events/v1/events"
+
+    def search(self, start_day: date, end_day: date, artists: Iterable[str]) -> list[dict[str, Any]]:
+        results: list[dict[str, Any]] = []
+        page = 1
+        while True:
+            data = self._get_url(self.API, {
+                "start_date": start_day.isoformat(), "end_date": end_day.isoformat(),
+                "per_page": 50, "page": page,
+            })
+            for item in data.get("events", []):
+                title = html.unescape(item.get("title", ""))
+                description = re.sub(r"<[^>]+>", " ", html.unescape(item.get("description", "")))
+                categories = " ".join(html.unescape(c.get("name", "")) for c in item.get("categories", []))
+                searchable = normalize_artist(f"{title} {description} {categories}")
+                if not known_artists_in_title(title, artists) and not any(
+                    term in searchable for term in ("concert", "live music", "neo soul", " r b ", "rhythm and blues")
+                ):
+                    continue
+                venue = item.get("venue") or {}
+                start_value = item.get("start_date", "")
+                results.append(local_calendar_event(
+                    f"kearney:{item.get('id')}", title, start_value[:10],
+                    start_value[11:19] or None, venue.get("venue", "Venue TBA"),
+                    venue.get("city", "Kearney"), venue.get("state", "NE"),
+                    item.get("website") or item.get("url", ""), artists,
+                    description, item.get("cost", ""),
+                ))
+            if page >= data.get("total_pages", 1):
+                break
+            page += 1
+        return results
+
+    def _get_url(self, base: str, params: dict[str, Any]) -> dict[str, Any]:
+        url = base + "?" + urlencode(params)
+        for attempt in range(self.retries):
+            try:
+                with urlopen(Request(url, headers={"User-Agent": "concert-scout/1.0"}), timeout=self.timeout) as response:
+                    return json.load(response)
+            except Exception as exc:
+                if attempt == self.retries - 1:
+                    raise RuntimeError("Visit Kearney calendar request failed") from exc
+                time.sleep(2 ** attempt)
+        return {}
+
+
+class LiedEventsParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.events: list[dict[str, str]] = []
+        self.current: dict[str, str] | None = None
+        self.capture: str | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        css_class = values.get("class", "") or ""
+        if tag == "div" and css_class == "title":
+            self.current = {}
+            self.capture = "title"
+        elif self.current is not None and tag == "div" and css_class == "date":
+            self.capture = "date"
+        elif self.current is not None and tag == "a":
+            href = values.get("href")
+            if self.capture == "title" and href:
+                self.current["url"] = urljoin("https://www.liedcenter.org", href)
+            elif href and ("ticket" in href or "stellar" in href):
+                self.current["tickets"] = href
+
+    def handle_data(self, data: str) -> None:
+        if self.current is not None and self.capture in ("title", "date"):
+            self.current[self.capture] = self.current.get(self.capture, "") + data.strip()
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "div" and self.capture in ("title", "date"):
+            if self.capture == "date" and self.current and self.current.get("title") and self.current.get("date"):
+                self.events.append(self.current)
+            self.capture = None
+
+
+class LiedCenterSource:
+    URL = "https://www.liedcenter.org/events-page"
+
+    def __init__(self, timeout: int = 20):
+        self.timeout = timeout
+
+    def search(self, start_day: date, end_day: date, artists: Iterable[str]) -> list[dict[str, Any]]:
+        with urlopen(Request(self.URL, headers={"User-Agent": "concert-scout/1.0"}), timeout=self.timeout) as response:
+            parser = LiedEventsParser()
+            parser.feed(response.read().decode("utf-8", errors="replace"))
+        results = []
+        for item in parser.events:
+            try:
+                parsed_date = datetime.strptime(item["date"].split("–")[0].split("-")[0].strip(), "%B %d, %Y").date()
+            except ValueError:
+                continue
+            if not start_day <= parsed_date <= end_day or not known_artists_in_title(item["title"], artists):
+                continue
+            slug = item.get("url", item["title"]).rstrip("/").rsplit("/", 1)[-1]
+            results.append(local_calendar_event(
+                f"lied:{slug}:{parsed_date}", item["title"], parsed_date.isoformat(), None,
+                "Lied Center for Performing Arts", "Lincoln", "NE",
+                item.get("tickets") or item.get("url", self.URL), artists,
+            ))
+        return results
+
+
 def add_months(today: date, months: int) -> date:
     month = today.month - 1 + months
     year = today.year + month // 12
@@ -349,6 +502,18 @@ def main() -> int:
                 found.extend(source.search_artist(artist, area, start, end))
         except Exception as exc:
             LOG.error("Search failed for %s; continuing: %s", area["city"], exc)
+    all_artists = list(dict.fromkeys(config["priority_artists"] + config.get("pandora_liked_artists", [])))
+    calendars = config.get("official_calendars", {})
+    if calendars.get("visit_kearney"):
+        try:
+            found.extend(VisitKearneySource(api_key).search(today, add_months(today, config.get("months_ahead", 12)), all_artists))
+        except Exception as exc:
+            LOG.error("Visit Kearney calendar failed; continuing: %s", exc)
+    if calendars.get("lied_center"):
+        try:
+            found.extend(LiedCenterSource().search(today, add_months(today, config.get("months_ahead", 12)), all_artists))
+        except Exception as exc:
+            LOG.error("Lied Center calendar failed; continuing: %s", exc)
     reports: list[ReportEvent] = []
     new_state = dict(old_state)
     home = config["home"]

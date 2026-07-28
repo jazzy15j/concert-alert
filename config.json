@@ -49,10 +49,22 @@
     "Teyana Taylor",
     "Wyclef Jean",
     "Yasiin Bey",
-    "Erykah Badu"
+    "Erykah Badu",
+    "En Vogue",
+    "Faith Evans",
+    "H.E.R.",
+    "Jazmine Sullivan",
+    "Kindred the Family Soul",
+    "Lalah Hathaway",
+    "Leela James",
+    "Sade"
   ],
   "pandora_liked_artists": [],
   "strong_genre_keywords": ["neo-soul"],
   "discovery_genre_keywords": [],
+  "official_calendars": {
+    "visit_kearney": true,
+    "lied_center": true
+  },
   "months_ahead": 12
 }

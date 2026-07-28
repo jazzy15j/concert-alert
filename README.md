@@ -20,6 +20,11 @@ status. Ticketmaster's genre metadata is used to find similar established acts.
 Only configured adjacent genres remain eligible as discoveries, so generic
 unfamiliar music performers do not flood the alert.
 
+The scout also reads two official local calendars: Visit Kearney's public
+calendar API (including The Other Side listings) and the Lied Center's public
+events calendar in Lincoln. These sources are isolated adapters and failures do
+not stop the remaining searches.
+
 Distances are approximate straight-line distances from Elm Creek, not driving
 distances.
 

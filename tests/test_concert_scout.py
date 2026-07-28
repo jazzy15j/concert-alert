@@ -1,6 +1,6 @@
 from concert_scout import (
     classify_event, deduplicate, exact_artist_match, is_excluded_event,
-    normalize_artist, price_text,
+    known_artists_in_title, normalize_artist, price_text,
 )
 
 ARTISTS = ["Ms. Lauryn Hill", "D'Angelo", "India.Arie"]
@@ -48,3 +48,9 @@ def test_match_classification():
 
 def test_missing_price_handling():
     assert price_text(event()) == "Price not published"
+
+
+def test_local_calendar_artist_detection_is_exact():
+    assert known_artists_in_title("Jazmine Sullivan Live", ["Jazmine Sullivan"]) == ["Jazmine Sullivan"]
+    assert known_artists_in_title("Jill Scott with Guests", ["Jill Scott"]) == ["Jill Scott"]
+    assert known_artists_in_title("Scott Bradlee's Postmodern Jukebox", ["Jill Scott"]) == []
