@@ -1,4 +1,31 @@
 {
+  "G5vzZ_1RgFc0g": {
+    "date": "2026-09-19",
+    "name": "Son Little - CityFolk Tour 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://tickets.meowwolf.com/events/denver/son-little/",
+    "venue": "Meow Wolf Denver"
+  },
+  "G5vzZ_1Ry3cSR": {
+    "date": "2026-10-16",
+    "name": "Theo Katzman",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://tickets.meowwolf.com/events/denver/theo-katzman/",
+    "venue": "Meow Wolf Denver"
+  },
+  "G5vzZ_7wT3cBS": {
+    "date": "2026-08-20",
+    "name": "Thee Sacred Souls, LA LOM, & The Womack Sisters",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/thee-sacred-souls-la-lom-the-denver-colorado-08-20-2026/event/1E00644CBF4ADEB3",
+    "venue": "JUNKYARD"
+  },
   "G5vzZ_AmxEywZ": {
     "date": "2026-08-25",
     "name": "A Great Night in Hip Hop - Nas & The Roots with Special Guest Jadakiss",
@@ -8,6 +35,24 @@
     "url": "https://www.ticketmaster.com/a-great-night-in-hip-hop-denver-colorado-08-25-2026/event/1E00645BA29F9C80",
     "venue": "JUNKYARD"
   },
+  "G5vzZ_FUokkC4": {
+    "date": "2026-11-01",
+    "name": "Teddy Swims: The UGLY Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/teddy-swims-the-ugly-tour-denver-colorado-11-01-2026/event/1E00648D91186395",
+    "venue": "Ball Arena"
+  },
+  "G5vzZ_arnbGNs": {
+    "date": "2026-09-29",
+    "name": "Beth Hart",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/beth-hart-denver-colorado-09-29-2026/event/1E006497AA60C8F1",
+    "venue": "Paramount Theatre"
+  },
   "G5vzZ_u1mS_gk": {
     "date": "2026-09-24",
     "name": "Erykah Badu",
@@ -16,5 +61,41 @@
     "time": "19:00:00",
     "url": "https://www.ticketmaster.com/erykah-badu-denver-colorado-09-24-2026/event/1E0064D2AECD9D46",
     "venue": "Fillmore Auditorium (Denver)"
+  },
+  "Z7r9jZ1A70b-e": {
+    "date": "2026-10-16",
+    "name": "Theo Katzman",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A70b-e",
+    "venue": "Meow Wolf  Denver Convergence Station"
+  },
+  "Z7r9jZ1A70bOp": {
+    "date": "2026-09-19",
+    "name": "Son Little - CityFolk Tour 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A70bOp",
+    "venue": "Meow Wolf  Denver Convergence Station"
+  },
+  "Z7r9jZ1A7P8Oa": {
+    "date": "2026-11-24",
+    "name": "Jalen N'Gonda w/ Brooke Combe",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7P8Oa",
+    "venue": "Cervantes Masterpiece Ballroom"
+  },
+  "Z7r9jZ1A7xZ-_": {
+    "date": "2026-10-17",
+    "name": "Sammy Rae and The Friends (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7xZ-_",
+    "venue": "Ogden Theatre"
   }
 }
