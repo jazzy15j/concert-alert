@@ -1,0 +1,27 @@
+{
+  "home": {
+    "name": "Elm Creek, Nebraska",
+    "latitude": 40.6997,
+    "longitude": -99.3715
+  },
+  "search_areas": [
+    {"city": "Kearney", "state_code": "NE", "radius_miles": 75, "timezone": "America/Chicago"},
+    {"city": "Lincoln", "state_code": "NE", "radius_miles": 65, "timezone": "America/Chicago"},
+    {"city": "Omaha", "state_code": "NE", "radius_miles": 65, "timezone": "America/Chicago"},
+    {"city": "Denver", "state_code": "CO", "radius_miles": 100, "timezone": "America/Denver"}
+  ],
+  "priority_artists": [
+    "Lauryn Hill", "Ms. Lauryn Hill", "Fugees", "Erykah Badu", "Jill Scott",
+    "Maxwell", "D'Angelo", "Sade", "Anita Baker", "Mary J. Blige", "TLC",
+    "SWV", "Xscape", "Brandy", "Monica", "Janet Jackson", "New Edition",
+    "Boyz II Men", "Toni Braxton", "Alicia Keys", "India.Arie",
+    "Musiq Soulchild", "Anthony Hamilton", "Kem", "Babyface", "Usher", "Nas",
+    "The Roots", "Common", "Wu-Tang Clan"
+  ],
+  "genre_keywords": [
+    "soul", "neo-soul", "R&B", "rhythm and blues", "funk", "Motown", "jazz",
+    "gospel", "old-school hip-hop", "1990s hip-hop", "1990s R&B",
+    "classic hip-hop"
+  ],
+  "months_ahead": 12
+}

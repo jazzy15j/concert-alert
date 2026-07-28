@@ -1,0 +1,47 @@
+from concert_scout import (
+    classify_event, deduplicate, exact_artist_match, is_excluded_event,
+    normalize_artist, price_text,
+)
+
+ARTISTS = ["Ms. Lauryn Hill", "D'Angelo", "India.Arie"]
+
+
+def event(name="A Concert", event_id="1", genre="R&B", attractions=None):
+    return {
+        "id": event_id,
+        "name": name,
+        "classifications": [{"segment": {"name": "Music"}, "genre": {"name": genre}}],
+        "_embedded": {"attractions": attractions if attractions is not None else [{"name": name}]},
+    }
+
+
+def test_artist_name_normalization():
+    assert normalize_artist("  D’Angelo ") == "d angelo"
+    assert normalize_artist("India.Arie") == "india arie"
+    assert normalize_artist("R&B") == "r and b"
+
+
+def test_exact_artist_matching():
+    assert exact_artist_match(["Guest", "MS. LAURYN HILL"], ARTISTS) == "Ms. Lauryn Hill"
+    assert exact_artist_match(["Lauryn Hill Experience"], ARTISTS) is None
+
+
+def test_tribute_act_exclusion():
+    assert is_excluded_event(event("A Tribute to Sade"))
+    assert is_excluded_event(event("The Prince Experience", attractions=[]))
+    assert not is_excluded_event(event("Sade with Unknown Opener"))
+
+
+def test_deduplication():
+    assert [e["id"] for e in deduplicate([event(event_id="a"), event(event_id="a"), event(event_id="b")])] == ["a", "b"]
+
+
+def test_match_classification():
+    exact = event("Ms Lauryn Hill Live", attractions=[{"name": "Ms. Lauryn Hill"}])
+    assert classify_event(exact, ARTISTS)[0] == "MUST SEE"
+    assert classify_event(event("Soul Night", genre="Soul"), ARTISTS)[0] == "STRONG MATCH"
+    assert classify_event(event("Indie Artist", genre="Alternative"), ARTISTS)[0] == "DISCOVERY"
+
+
+def test_missing_price_handling():
+    assert price_text(event()) == "Price not published"

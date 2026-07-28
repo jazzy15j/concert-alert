@@ -1,0 +1,378 @@
+#!/usr/bin/env python3
+"""Free, small concert alert powered by Ticketmaster Discovery API v2."""
+
+from __future__ import annotations
+
+import html
+import json
+import logging
+import math
+import os
+import re
+import smtplib
+import sys
+import time
+import unicodedata
+from dataclasses import dataclass
+from datetime import date, datetime, time as dt_time, timezone
+from email.message import EmailMessage
+from pathlib import Path
+from typing import Any, Iterable
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+from zoneinfo import ZoneInfo
+
+ROOT = Path(__file__).resolve().parent
+CONFIG_PATH = ROOT / "config.json"
+STATE_PATH = ROOT / "data" / "seen_events.json"
+API_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
+LOG = logging.getLogger("concert_scout")
+STRONG_TERMS = {
+    "soul", "neo soul", "r b", "rhythm and blues", "funk", "motown", "jazz",
+    "gospel", "hip hop", "rap"
+}
+EXCLUDED_PHRASES = (
+    "tribute to", "a tribute", "impersonator", "parking", "vip package",
+    "vip club", "meet and greet", "nightclub party"
+)
+
+
+def normalize_artist(value: str) -> str:
+    """Normalize punctuation/case while preserving meaningful words."""
+    value = value.replace("’", " ").replace("‘", " ").replace("–", " ").replace("—", " ")
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode()
+    value = value.lower().replace("&", " and ")
+    return " ".join(re.sub(r"[^a-z0-9]+", " ", value).split())
+
+
+def exact_artist_match(names: Iterable[str], priority_artists: Iterable[str]) -> str | None:
+    priorities = {normalize_artist(a): a for a in priority_artists}
+    for name in names:
+        normalized = normalize_artist(name)
+        if normalized in priorities:
+            return priorities[normalized]
+    return None
+
+
+def is_excluded_event(event: dict[str, Any]) -> bool:
+    name = normalize_artist(event.get("name", ""))
+    # "Experience" is too broad alone (e.g. named performers can use it), but
+    # is a tribute warning when paired with another tribute indicator.
+    if any(normalize_artist(p) in name for p in EXCLUDED_PHRASES):
+        return True
+    if "experience" in name and ("tribute" in name or not event.get("_embedded", {}).get("attractions")):
+        return True
+    classifications = event.get("classifications") or []
+    segment = normalize_artist((classifications[0].get("segment") or {}).get("name", "")) if classifications else ""
+    genre = normalize_artist((classifications[0].get("genre") or {}).get("name", "")) if classifications else ""
+    return segment not in ("", "music") or genre in {"comedy", "theatre", "sports"}
+
+
+def event_names(event: dict[str, Any]) -> list[str]:
+    attractions = event.get("_embedded", {}).get("attractions", [])
+    return [a["name"] for a in attractions if a.get("name")] or [event.get("name", "")]
+
+
+def classification_terms(event: dict[str, Any]) -> set[str]:
+    terms: set[str] = set()
+    for item in event.get("classifications") or []:
+        for key in ("segment", "genre", "subGenre", "type", "subType"):
+            value = (item.get(key) or {}).get("name")
+            if value:
+                terms.add(normalize_artist(value))
+    for attraction in event.get("_embedded", {}).get("attractions", []):
+        for item in attraction.get("classifications") or []:
+            for key in ("genre", "subGenre"):
+                value = (item.get(key) or {}).get("name")
+                if value:
+                    terms.add(normalize_artist(value))
+    return terms
+
+
+def classify_event(event: dict[str, Any], priority_artists: Iterable[str]) -> tuple[str, str] | None:
+    artist = exact_artist_match(event_names(event), priority_artists)
+    if artist:
+        return "MUST SEE", f"Priority artist match: {artist}"
+    terms = classification_terms(event)
+    matching = sorted(t for t in terms if any(k in t or t in k for k in STRONG_TERMS))
+    if matching:
+        return "STRONG MATCH", f"Genre match: {matching[0].title()}"
+    # Ticketmaster's Music classification is broad, so keep legitimate named
+    # concerts as discoveries while filters remove obvious non-concert items.
+    if event.get("_embedded", {}).get("attractions"):
+        return "DISCOVERY", "A named music performer near a selected city"
+    return None
+
+
+def deduplicate(events: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_id: dict[str, dict[str, Any]] = {}
+    for event in events:
+        event_id = event.get("id")
+        if event_id and event_id not in by_id:
+            by_id[event_id] = event
+    return list(by_id.values())
+
+
+def price_text(event: dict[str, Any]) -> str:
+    ranges = event.get("priceRanges") or []
+    if not ranges:
+        return "Price not published"
+    lows = [p["min"] for p in ranges if isinstance(p.get("min"), (int, float))]
+    highs = [p["max"] for p in ranges if isinstance(p.get("max"), (int, float))]
+    if not lows and not highs:
+        return "Price not published"
+    currency = next((p.get("currency") for p in ranges if p.get("currency")), "USD")
+    low = min(lows) if lows else min(highs)
+    high = max(highs) if highs else max(lows)
+    return f"${low:,.2f}–${high:,.2f} {currency}" if low != high else f"${low:,.2f} {currency}"
+
+
+def haversine_miles(lat1: float, lon1: float, lat2: float, lon2: float) -> int:
+    radius = 3958.8
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp, dl = math.radians(lat2 - lat1), math.radians(lon2 - lon1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return round(radius * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a)))
+
+
+def local_event_datetime(event: dict[str, Any], tz_name: str) -> tuple[str, str]:
+    start = event.get("dates", {}).get("start", {})
+    local_date = start.get("localDate", "Date TBA")
+    local_time = start.get("localTime")
+    if local_time:
+        try:
+            display_time = datetime.strptime(local_time[:5], "%H:%M").strftime("%-I:%M %p")
+        except ValueError:
+            display_time = local_time
+    else:
+        display_time = "Time TBA"
+    return local_date, f"{display_time} {datetime.now(ZoneInfo(tz_name)).tzname()}"
+
+
+def sale_text(event: dict[str, Any]) -> str:
+    status = (event.get("dates", {}).get("status") or {}).get("code")
+    public = (event.get("sales", {}).get("public") or {})
+    if status and status not in ("onsale", "offsale"):
+        return status.replace("_", " ").title()
+    if status == "onsale":
+        return "On sale"
+    start = public.get("startDateTime")
+    if start:
+        return "On sale " + start.replace("T", " ").replace("Z", " UTC")
+    return (status or "Sale status unavailable").replace("_", " ").title()
+
+
+class TicketmasterSource:
+    """Isolated source adapter so additional official APIs can be added later."""
+
+    def __init__(self, api_key: str, timeout: int = 20, retries: int = 3):
+        self.api_key, self.timeout, self.retries = api_key, timeout, retries
+
+    def _get(self, params: dict[str, Any]) -> dict[str, Any]:
+        url = API_URL + "?" + urlencode({**params, "apikey": self.api_key})
+        for attempt in range(self.retries):
+            try:
+                with urlopen(Request(url, headers={"User-Agent": "concert-scout/1.0"}), timeout=self.timeout) as response:
+                    return json.load(response)
+            except Exception as exc:
+                if attempt == self.retries - 1:
+                    raise RuntimeError(f"Ticketmaster request failed after {self.retries} attempts") from exc
+                time.sleep(2 ** attempt)
+        return {}
+
+    def search_area(self, area: dict[str, Any], start: str, end: str) -> list[dict[str, Any]]:
+        events: list[dict[str, Any]] = []
+        page = 0
+        while True:
+            data = self._get({
+                "city": area["city"], "stateCode": area["state_code"],
+                "radius": area["radius_miles"], "unit": "miles",
+                "classificationName": "music", "startDateTime": start,
+                "endDateTime": end, "size": 200, "page": page,
+                "sort": "date,asc"
+            })
+            events.extend(data.get("_embedded", {}).get("events", []))
+            info = data.get("page", {})
+            if page + 1 >= info.get("totalPages", 0):
+                break
+            page += 1
+            if page >= 5:  # Discovery API deep paging limit (1000 results).
+                LOG.warning("Stopped pagination at Ticketmaster's 1,000-result limit for %s", area["city"])
+                break
+        return events
+
+    def search_artist(self, artist: str, area: dict[str, Any], start: str, end: str) -> list[dict[str, Any]]:
+        data = self._get({
+            "keyword": artist, "city": area["city"], "stateCode": area["state_code"],
+            "radius": area["radius_miles"], "unit": "miles",
+            "classificationName": "music", "startDateTime": start,
+            "endDateTime": end, "size": 50, "sort": "date,asc"
+        })
+        return data.get("_embedded", {}).get("events", [])
+
+
+def add_months(today: date, months: int) -> date:
+    month = today.month - 1 + months
+    year = today.year + month // 12
+    month = month % 12 + 1
+    import calendar
+    return date(year, month, min(today.day, calendar.monthrange(year, month)[1]))
+
+
+def snapshot(event: dict[str, Any]) -> dict[str, Any]:
+    venue = ((event.get("_embedded", {}).get("venues") or [{}])[0])
+    return {
+        "name": event.get("name"),
+        "date": event.get("dates", {}).get("start", {}).get("localDate"),
+        "time": event.get("dates", {}).get("start", {}).get("localTime"),
+        "venue": venue.get("name"),
+        "url": event.get("url"),
+        "price": price_text(event),
+        "status": (event.get("dates", {}).get("status") or {}).get("code")
+    }
+
+
+def meaningful_change(old: dict[str, Any] | None, new: dict[str, Any]) -> str | None:
+    if old is None:
+        return "New event"
+    labels = {
+        "url": "Ticket link is now available", "price": "Ticket prices are now available",
+        "venue": "Venue changed", "date": "Date changed", "time": "Start time changed",
+        "status": "Event status changed"
+    }
+    for key, label in labels.items():
+        if old.get(key) != new.get(key):
+            if key == "url" and not new.get(key):
+                continue
+            if key == "price" and new.get(key) == "Price not published":
+                continue
+            return label
+    return None
+
+
+@dataclass
+class ReportEvent:
+    raw: dict[str, Any]
+    label: str
+    reason: str
+    change: str
+    distance: int | None
+    timezone: str
+
+
+def event_area(event: dict[str, Any], areas: list[dict[str, Any]]) -> dict[str, Any]:
+    venue = ((event.get("_embedded", {}).get("venues") or [{}])[0])
+    state = (venue.get("state") or {}).get("stateCode")
+    city = normalize_artist((venue.get("city") or {}).get("name", ""))
+    same_state = [a for a in areas if a["state_code"] == state]
+    return next((a for a in same_state if normalize_artist(a["city"]) == city), same_state[0] if same_state else areas[0])
+
+
+def render_email(reports: list[ReportEvent]) -> str:
+    colors = {"MUST SEE": "#8b1e3f", "STRONG MATCH": "#305f72", "DISCOVERY": "#5c6b3c"}
+    sections = []
+    for label, heading in (("MUST SEE", "MUST SEE"), ("STRONG MATCH", "STRONG MATCHES"), ("DISCOVERY", "DISCOVERIES")):
+        cards = []
+        for report in (r for r in reports if r.label == label):
+            e = report.raw
+            venue = ((e.get("_embedded", {}).get("venues") or [{}])[0])
+            city = (venue.get("city") or {}).get("name", "City TBA")
+            state = (venue.get("state") or {}).get("stateCode", "")
+            date_value, time_value = local_event_datetime(e, report.timezone)
+            lineup = ", ".join(event_names(e))
+            distance = f"{report.distance} miles from Elm Creek" if report.distance is not None else "Distance unavailable"
+            url = html.escape(e.get("url") or "#", quote=True)
+            cards.append(f"""
+              <div style="border:1px solid #ddd;border-left:5px solid {colors[label]};padding:16px;margin:12px 0;border-radius:5px">
+                <div style="font-size:12px;color:{colors[label]};font-weight:bold">{label} · {html.escape(report.change)}</div>
+                <h3 style="margin:6px 0">{html.escape(e.get("name", "Untitled event"))}</h3>
+                <div><b>Lineup:</b> {html.escape(lineup)}</div>
+                <div><b>When:</b> {html.escape(date_value)} at {html.escape(time_value)}</div>
+                <div><b>Where:</b> {html.escape(venue.get("name", "Venue TBA"))}, {html.escape(city)}, {html.escape(state)}</div>
+                <div><b>Distance:</b> {distance}</div>
+                <div><b>Price:</b> {html.escape(price_text(e))}</div>
+                <div><b>Tickets:</b> {html.escape(sale_text(e))}</div>
+                <div style="margin:8px 0;color:#555">{html.escape(report.reason)}</div>
+                <a href="{url}" style="display:inline-block;background:#222;color:white;text-decoration:none;padding:9px 14px;border-radius:4px">View Tickets</a>
+              </div>""")
+        if cards:
+            sections.append(f"<h2 style='margin-top:28px'>{heading}</h2>{''.join(cards)}")
+    return f"""<!doctype html><html><body style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#222">
+      <h1>Concert Scout</h1><p>New concerts and meaningful updates near your selected cities.</p>
+      {''.join(sections)}
+      <p style="color:#777;font-size:12px">Distances are approximate straight-line distances from Elm Creek, Nebraska.</p>
+    </body></html>"""
+
+
+def send_email(reports: list[ReportEvent]) -> None:
+    sender = os.environ["ALERT_EMAIL_FROM"]
+    recipient = os.environ["ALERT_EMAIL_TO"]
+    message = EmailMessage()
+    message["From"], message["To"] = sender, recipient
+    message["Subject"] = f"Concert Scout: {len(reports)} new matches — {date.today().isoformat()}"
+    message.set_content("Concert Scout found new matches. View this message in an HTML-capable email client.")
+    message.add_alternative(render_email(reports), subtype="html")
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
+        smtp.login(sender, os.environ["GMAIL_APP_PASSWORD"])
+        smtp.send_message(message)
+
+
+def main() -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    api_key = os.environ.get("TICKETMASTER_API_KEY")
+    if not api_key:
+        LOG.error("TICKETMASTER_API_KEY is required")
+        return 2
+    config = json.loads(CONFIG_PATH.read_text())
+    old_state = json.loads(STATE_PATH.read_text()) if STATE_PATH.exists() else {}
+    today = date.today()
+    start = datetime.combine(today, dt_time.min, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    end = datetime.combine(add_months(today, config.get("months_ahead", 12)), dt_time.max, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    source = TicketmasterSource(api_key)
+    found: list[dict[str, Any]] = []
+    for area in config["search_areas"]:
+        try:
+            found.extend(source.search_area(area, start, end))
+            for artist in config["priority_artists"]:
+                found.extend(source.search_artist(artist, area, start, end))
+        except Exception as exc:
+            LOG.error("Search failed for %s; continuing: %s", area["city"], exc)
+    reports: list[ReportEvent] = []
+    new_state = dict(old_state)
+    home = config["home"]
+    for event in deduplicate(found):
+        if is_excluded_event(event):
+            continue
+        classification = classify_event(event, config["priority_artists"])
+        if not classification:
+            continue
+        event_id = event["id"]
+        current = snapshot(event)
+        change = meaningful_change(old_state.get(event_id), current)
+        new_state[event_id] = current
+        if not change:
+            continue
+        venue = ((event.get("_embedded", {}).get("venues") or [{}])[0])
+        location = venue.get("location") or {}
+        try:
+            distance = haversine_miles(home["latitude"], home["longitude"], float(location["latitude"]), float(location["longitude"]))
+        except (KeyError, TypeError, ValueError):
+            distance = None
+        area = event_area(event, config["search_areas"])
+        reports.append(ReportEvent(event, *classification, change, distance, area["timezone"]))
+    rank = {"MUST SEE": 0, "STRONG MATCH": 1, "DISCOVERY": 2}
+    reports.sort(key=lambda r: (rank[r.label], r.distance if r.distance is not None else 99999, r.raw.get("dates", {}).get("start", {}).get("localDate", "9999")))
+    if reports:
+        send_email(reports)
+        LOG.info("Sent %d concert alert(s)", len(reports))
+    else:
+        LOG.info("No new or meaningfully changed events; no email sent")
+    if new_state != old_state:
+        STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        STATE_PATH.write_text(json.dumps(new_state, indent=2, sort_keys=True) + "\n")
+        LOG.info("Updated state")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

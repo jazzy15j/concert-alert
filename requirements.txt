@@ -1,0 +1,2 @@
+# Runtime uses only the Python 3.12 standard library.
+# pytest is installed separately by the GitHub Actions workflow for tests.
