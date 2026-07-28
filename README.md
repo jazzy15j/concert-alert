@@ -38,9 +38,11 @@ distances.
 4. Add the four GitHub secrets below.
 5. Run **Actions → Concert Scout → Run workflow**.
 
-Each optional additional person gets a separate profile JSON, state JSON, and
-recipient secret. `profiles/husband.json` demonstrates this without mixing its
-alerts or history with the default profile.
+Each additional person gets a separate profile JSON and state JSON, so their
+matches and history do not mix with yours. `profiles/husband.json` demonstrates
+this while reusing the already-configured recipient email. His messages have a
+separate **Metal & Hardcore Concert Scout** subject, making them easy to
+recognize and forward.
 
 ## One-time setup
 
@@ -96,12 +98,13 @@ Run an additional profile independently:
 python concert_scout.py \
   --config profiles/husband.json \
   --state data/seen_events_husband.json \
-  --recipient-env HUSBAND_ALERT_EMAIL_TO
+  --recipient-env ALERT_EMAIL_TO
 ```
 
-To enable the included husband profile in GitHub, add the
-`HUSBAND_ALERT_EMAIL_TO` repository secret and set the repository variable
-`ENABLE_HUSBAND_PROFILE` to `true`. Until then, that profile is safely skipped.
+The included husband profile runs automatically on the daily schedule and is
+selected by default for manual runs. It sends to the existing `ALERT_EMAIL_TO`
+address, so it does not require another Gmail account, app password, or GitHub
+secret.
 
 No email is sent when nothing has changed. If a city request fails, the other
 cities are still attempted, and secrets are never logged.
