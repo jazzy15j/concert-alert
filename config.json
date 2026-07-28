@@ -24,9 +24,11 @@
     "Cypress Hill",
     "DJ Drama",
     "Eminem",
+    "India.Arie",
     "Ja Rule",
     "Janet Jackson",
     "Junior M.A.F.I.A.",
+    "Jill Scott",
     "K-Ci & JoJo",
     "Kennedy Ryon",
     "Keyshia Cole",
@@ -50,7 +52,7 @@
     "Erykah Badu"
   ],
   "pandora_liked_artists": [],
-  "strong_genre_keywords": [],
+  "strong_genre_keywords": ["neo-soul"],
   "discovery_genre_keywords": [],
   "months_ahead": 12
 }
