@@ -11,17 +11,10 @@
     {"city": "Denver", "state_code": "CO", "radius_miles": 100, "timezone": "America/Denver"}
   ],
   "priority_artists": [
-    "Lauryn Hill", "Ms. Lauryn Hill", "Fugees", "Erykah Badu", "Jill Scott",
-    "Maxwell", "D'Angelo", "Sade", "Anita Baker", "Mary J. Blige", "TLC",
-    "SWV", "Xscape", "Brandy", "Monica", "Janet Jackson", "New Edition",
-    "Boyz II Men", "Toni Braxton", "Alicia Keys", "India.Arie",
-    "Musiq Soulchild", "Anthony Hamilton", "Kem", "Babyface", "Usher", "Nas",
-    "The Roots", "Common", "Wu-Tang Clan"
-  ],
-  "pandora_liked_artists": [
     "2Pac",
     "Tupac Shakur",
     "Amy Winehouse",
+    "Anthony Hamilton",
     "Arrested Development",
     "Beyoncé",
     "Bill Withers",
@@ -32,28 +25,32 @@
     "DJ Drama",
     "Eminem",
     "Ja Rule",
+    "Janet Jackson",
     "Junior M.A.F.I.A.",
     "K-Ci & JoJo",
     "Kennedy Ryon",
     "Keyshia Cole",
+    "Lauryn Hill",
     "Lil' Kim",
     "Marsha Ambrosius",
+    "Mary J. Blige",
     "Method Man",
     "Missy Elliott",
+    "Monica",
     "Mos Def",
+    "Ms. Lauryn Hill",
+    "Nas",
     "Olivia Dean",
     "Outkast",
     "Snoh Aalegra",
+    "SWV",
     "Teyana Taylor",
     "Wyclef Jean",
-    "Yasiin Bey"
+    "Yasiin Bey",
+    "Erykah Badu"
   ],
-  "strong_genre_keywords": [
-    "soul", "neo-soul", "R&B", "rhythm and blues", "funk", "Motown", "jazz",
-    "gospel"
-  ],
-  "discovery_genre_keywords": [
-    "blues", "reggae", "afrobeat", "quiet storm"
-  ],
+  "pandora_liked_artists": [],
+  "strong_genre_keywords": [],
+  "discovery_genre_keywords": [],
   "months_ahead": 12
 }
