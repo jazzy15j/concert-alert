@@ -27,10 +27,6 @@ CONFIG_PATH = ROOT / "config.json"
 STATE_PATH = ROOT / "data" / "seen_events.json"
 API_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
 LOG = logging.getLogger("concert_scout")
-STRONG_TERMS = {
-    "soul", "neo soul", "r b", "rhythm and blues", "funk", "motown", "jazz",
-    "gospel", "hip hop", "rap"
-}
 EXCLUDED_PHRASES = (
     "tribute to", "a tribute", "impersonator", "parking", "vip package",
     "vip club", "meet and greet", "nightclub party"
@@ -89,18 +85,34 @@ def classification_terms(event: dict[str, Any]) -> set[str]:
     return terms
 
 
-def classify_event(event: dict[str, Any], priority_artists: Iterable[str]) -> tuple[str, str] | None:
+def terms_match(terms: set[str], keywords: Iterable[str]) -> str | None:
+    normalized_keywords = [normalize_artist(keyword) for keyword in keywords]
+    return next(
+        (term for term in sorted(terms) if any(keyword in term or term in keyword for keyword in normalized_keywords)),
+        None,
+    )
+
+
+def classify_event(
+    event: dict[str, Any],
+    priority_artists: Iterable[str],
+    pandora_liked_artists: Iterable[str] = (),
+    strong_genres: Iterable[str] = ("soul", "neo-soul", "R&B", "funk", "jazz", "gospel"),
+    discovery_genres: Iterable[str] = ("blues", "reggae", "afrobeat"),
+) -> tuple[str, str] | None:
     artist = exact_artist_match(event_names(event), priority_artists)
     if artist:
         return "MUST SEE", f"Priority artist match: {artist}"
+    liked_artist = exact_artist_match(event_names(event), pandora_liked_artists)
+    if liked_artist:
+        return "STRONG MATCH", f"Artist from your Pandora likes: {liked_artist}"
     terms = classification_terms(event)
-    matching = sorted(t for t in terms if any(k in t or t in k for k in STRONG_TERMS))
-    if matching:
-        return "STRONG MATCH", f"Genre match: {matching[0].title()}"
-    # Ticketmaster's Music classification is broad, so keep legitimate named
-    # concerts as discoveries while filters remove obvious non-concert items.
-    if event.get("_embedded", {}).get("attractions"):
-        return "DISCOVERY", "A named music performer near a selected city"
+    strong_match = terms_match(terms, strong_genres)
+    if strong_match:
+        return "STRONG MATCH", f"Genre match: {strong_match.title()}"
+    discovery_match = terms_match(terms, discovery_genres)
+    if discovery_match:
+        return "DISCOVERY", f"Adjacent genre match: {discovery_match.title()}"
     return None
 
 
@@ -343,7 +355,13 @@ def main() -> int:
     for event in deduplicate(found):
         if is_excluded_event(event):
             continue
-        classification = classify_event(event, config["priority_artists"])
+        classification = classify_event(
+            event,
+            config["priority_artists"],
+            config.get("pandora_liked_artists", []),
+            config.get("strong_genre_keywords", []),
+            config.get("discovery_genre_keywords", []),
+        )
         if not classification:
             continue
         event_id = event["id"]

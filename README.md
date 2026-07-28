@@ -6,16 +6,19 @@ database, web scraping, server, or paid hosting.
 
 ## What it searches
 
-Search locations, radii, priority artists, and genre terms are all editable in
-`config.json`. The supplied configuration covers Kearney, Lincoln, Omaha, and
-Denver and searches events from today through 12 months ahead.
+Search locations, radii, priority artists, Pandora-liked artists, and genre
+terms are all editable in `config.json`. The supplied configuration covers
+Kearney, Lincoln, Omaha, and Denver and searches events from today through 12
+months ahead. Add artist names from Pandora to `pandora_liked_artists`; their
+concerts receive a Strong Match label.
 
 Ticketmaster results are deduplicated by their stable event ID, filtered to
 remove obvious non-concert/add-on/tribute listings, classified, sorted, and
 compared with `data/seen_events.json`. The email is sent only for a new event or
 a meaningful change to its URL, newly published price, venue, date/time, or
-status. Ticketmaster's genre metadata is used to find similar established acts;
-named music acts outside the watchlist remain eligible as discoveries.
+status. Ticketmaster's genre metadata is used to find similar established acts.
+Only configured adjacent genres remain eligible as discoveries, so generic
+unfamiliar music performers do not flood the alert.
 
 Distances are approximate straight-line distances from Elm Creek, not driving
 distances.

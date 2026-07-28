@@ -18,10 +18,13 @@
     "Musiq Soulchild", "Anthony Hamilton", "Kem", "Babyface", "Usher", "Nas",
     "The Roots", "Common", "Wu-Tang Clan"
   ],
-  "genre_keywords": [
+  "pandora_liked_artists": [],
+  "strong_genre_keywords": [
     "soul", "neo-soul", "R&B", "rhythm and blues", "funk", "Motown", "jazz",
-    "gospel", "old-school hip-hop", "1990s hip-hop", "1990s R&B",
-    "classic hip-hop"
+    "gospel"
+  ],
+  "discovery_genre_keywords": [
+    "blues", "reggae", "afrobeat", "quiet storm"
   ],
   "months_ahead": 12
 }

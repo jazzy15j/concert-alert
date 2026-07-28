@@ -40,7 +40,10 @@ def test_match_classification():
     exact = event("Ms Lauryn Hill Live", attractions=[{"name": "Ms. Lauryn Hill"}])
     assert classify_event(exact, ARTISTS)[0] == "MUST SEE"
     assert classify_event(event("Soul Night", genre="Soul"), ARTISTS)[0] == "STRONG MATCH"
-    assert classify_event(event("Indie Artist", genre="Alternative"), ARTISTS)[0] == "DISCOVERY"
+    liked = event("Favorite Live", genre="Alternative", attractions=[{"name": "Favorite Artist"}])
+    assert classify_event(liked, ARTISTS, ["Favorite Artist"])[0] == "STRONG MATCH"
+    assert classify_event(event("Reggae Artist", genre="Reggae"), ARTISTS)[0] == "DISCOVERY"
+    assert classify_event(event("Unknown Indie Artist", genre="Alternative"), ARTISTS) is None
 
 
 def test_missing_price_handling():
