@@ -1,1 +1,767 @@
-{}
+{
+  "17FZv0G61Sq6AEC": {
+    "date": "2026-11-22",
+    "name": "Beartooth: Pure Ecstasy World Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:30:00",
+    "url": "https://www.ticketmaster.com/beartooth-pure-ecstasy-world-tour-omaha-nebraska-11-22-2026/event/200064ACDD1C59CE",
+    "venue": "Steelhouse Omaha"
+  },
+  "17FZv0G65Rnd49z": {
+    "date": "2026-10-08",
+    "name": "Taste Of Chaos",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:00:00",
+    "url": "https://www.ticketmaster.com/taste-of-chaos-omaha-nebraska-10-08-2026/event/200064BBEA0D55F8",
+    "venue": "Steelhouse Omaha"
+  },
+  "17FZv0G6CXXpNdR": {
+    "date": "2026-12-16",
+    "name": "TRIVIUM: CROWN IN THE GRAVE WORLD TOUR",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:35:00",
+    "url": "https://www.ticketmaster.com/trivium-crown-in-the-grave-world-omaha-nebraska-12-16-2026/event/200064EFBE5A30EF",
+    "venue": "Steelhouse Omaha"
+  },
+  "17FZv0G6Gn8Q-JW": {
+    "date": "2026-12-05",
+    "name": "Imminence: North America 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketmaster.com/imminence-north-america-2026-omaha-nebraska-12-05-2026/event/200064CA906A19BD",
+    "venue": "Steelhouse Omaha"
+  },
+  "1AOZkGIGkeDlvJI": {
+    "date": "2026-11-20",
+    "name": "Sabaton: Legends on Tour",
+    "price": "Price not published",
+    "status": "rescheduled",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/sabaton-legends-on-tour-omaha-nebraska-11-20-2026/event/20006328BBAC19A8",
+    "venue": "Steelhouse Omaha"
+  },
+  "1AOZkoAGkd3sgAl": {
+    "date": "2026-09-22",
+    "name": "Bilmuri - Kinda Hard Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/bilmuri-kinda-hard-tour-omaha-nebraska-09-22-2026/event/20006445D2C7516B",
+    "venue": "Steelhouse Omaha"
+  },
+  "G5vzZ_196hmUm": {
+    "date": "2026-12-12",
+    "name": "Drop Dead Gorgeous",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/drop-dead-gorgeous-denver-colorado-12-12-2026/event/1E0064A5C76EEDAE",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_19koCIM": {
+    "date": "2026-11-20",
+    "name": "Saosin: 20 Years of Self-Titled",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/saosin-20-years-of-selftitled-denver-colorado-11-20-2026/event/1E0064A5C644EA37",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_1RwcuQ_": {
+    "date": "2026-09-09",
+    "name": "Elder",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://thefederaltheatre.holdmyticket.com/tickets/462864",
+    "venue": "The Federal Theatre"
+  },
+  "G5vzZ_1SIgr2S": {
+    "date": "2026-12-12",
+    "name": "Beartooth: Pure Ecstasy World Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:00:00",
+    "url": "https://www.ticketmaster.com/beartooth-pure-ecstasy-world-tour-denver-colorado-12-12-2026/event/1E0064ACE8D5E3F3",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_1Svml9I": {
+    "date": "2026-08-01",
+    "name": "Of Virtue & Savage Hands",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/of-virtue-savage-hands-denver-colorado-08-01-2026/event/1E0064ACC1BAB5E8",
+    "venue": "Marquis"
+  },
+  "G5vzZ_1TPDx3M": {
+    "date": "2026-10-09",
+    "name": "Arch Enemy & The Black Dahlia Murder: Wrath Across North America 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:00:00",
+    "url": "https://www.ticketmaster.com/arch-enemy-the-black-dahlia-murder-denver-colorado-10-09-2026/event/1E0064AFE5EE24B7",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_51W4ap1": {
+    "date": "2026-10-13",
+    "name": "In Her Own Words X Every Avenue - Perfectly Unfamiliar Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://hqdenver.holdmyticket.com/tickets/463016",
+    "venue": "HQ"
+  },
+  "G5vzZ_52GYqPQ": {
+    "date": "2026-11-02",
+    "name": "Periphery - A Pale White Dot US Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:00:00",
+    "url": "https://www.ticketmaster.com/periphery-a-pale-white-dot-us-denver-colorado-11-02-2026/event/1E0064B3CCC1D95A",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_53YPlC7": {
+    "date": "2026-12-08",
+    "name": "DragonForce: Inhuman Rampage 20th Anniversary",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/dragonforce-inhuman-rampage-20th-anniversary-denver-colorado-12-08-2026/event/1E0064B4B096B384",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_55-B5ym": {
+    "date": "2026-10-23",
+    "name": "SiM - HOOMAN WORLD TOUR",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://theorientaltheater.holdmyticket.com/tickets/463261",
+    "venue": "Oriental Theater"
+  },
+  "G5vzZ_5MBaWLX": {
+    "date": "2026-09-23",
+    "name": "Nevertel",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/nevertel-denver-colorado-09-23-2026/event/1E0064BDFA27D7FE",
+    "venue": "Marquis"
+  },
+  "G5vzZ_5QulPp0": {
+    "date": "2026-11-07",
+    "name": "10 Years of 6LACK Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/10-years-of-6lack-tour-denver-colorado-11-07-2026/event/1E0064B68DAE55A4",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_5ldYcXg": {
+    "date": "2026-10-23",
+    "name": "Catch Your Breath - Not Broken Enough Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/catch-your-breath-not-broken-enough-denver-colorado-10-23-2026/event/1E0064BAC3C2DFB5",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_5nhWFMO": {
+    "date": "2026-11-03",
+    "name": "Knocked Loose & Denzel Curry",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:30:00",
+    "url": "https://www.ticketmaster.com/knocked-loose-denzel-curry-denver-colorado-11-03-2026/event/1E0064BA9BF48DE0",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_5wI2lzG": {
+    "date": "2026-10-14",
+    "name": "Mastodon",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/mastodon-denver-colorado-10-14-2026/event/1E0064BCA83EBE0C",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_5wf6bVp": {
+    "date": "2026-10-19",
+    "name": "TASTE OF CHAOS",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "16:30:00",
+    "url": "https://www.ticketmaster.com/taste-of-chaos-denver-colorado-10-19-2026/event/1E0064BC941D8D16",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_6Vx7m8y": {
+    "date": "2026-10-17",
+    "name": "Berried Alive - Live In The Flesh",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/berried-alive-live-in-the-flesh-denver-colorado-10-17-2026/event/1E00647D2212E439",
+    "venue": "Marquis"
+  },
+  "G5vzZ_6lC9HUo": {
+    "date": "2026-09-26",
+    "name": "PRESIDENT: North American Campaign 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/president-north-american-campaign-2026-denver-colorado-09-26-2026/event/1E00647ACE5FCD91",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_6wqSlV1": {
+    "date": "2026-09-02",
+    "name": "BABYMETAL WORLD TOUR 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:20:00",
+    "url": "https://www.ticketmaster.com/babymetal-world-tour-2026-denver-colorado-09-02-2026/event/1E00647C9DCEBD0A",
+    "venue": "Ball Arena"
+  },
+  "G5vzZ_7SqN8Jt": {
+    "date": "2026-07-29",
+    "name": "Poppy - Constantly Nowhere Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/poppy-constantly-nowhere-tour-denver-colorado-07-29-2026/event/1E00644CDD8D09A9",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_7sR79a9": {
+    "date": "2026-08-21",
+    "name": "J. Cole: The Fall-Off Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/j-cole-the-falloff-tour-denver-colorado-08-21-2026/event/1E00644C6F117257",
+    "venue": "Ball Arena"
+  },
+  "G5vzZ_AaaIWAC": {
+    "date": "2026-08-21",
+    "name": "Club Level Seating: J. Cole",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/club-level-seating-j-cole-denver-colorado-08-21-2026/event/1E00645249A3D14E",
+    "venue": "Ball Arena"
+  },
+  "G5vzZ_ArjDboO": {
+    "date": "2026-09-11",
+    "name": "Kamelot - Dark Asylum World Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/kamelot-dark-asylum-world-tour-denver-colorado-09-11-2026/event/1E0064579CED8460",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_CBUMnhu": {
+    "date": "2026-10-09",
+    "name": "The Number Twelve Looks Like You",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://hqdenver.holdmyticket.com/tickets-preview/b1781a1cf39085551a1f7807b552a684",
+    "venue": "HQ"
+  },
+  "G5vzZ_Cz17Qno": {
+    "date": "2026-12-04",
+    "name": "Suicide Silence: REMINDERS OF HELL TOUR",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/suicide-silence-reminders-of-hell-tour-denver-colorado-12-04-2026/event/1E0064EE0A11AA91",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_F1m_CgT": {
+    "date": "2026-08-13",
+    "name": "JUTES - Smile You're on Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/jutes-smile-youre-on-tour-denver-colorado-08-13-2026/event/1E006482AE64ED7F",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_FQ3_UDG": {
+    "date": "2026-09-02",
+    "name": "Club Level Seating: BABYMETAL",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:20:00",
+    "url": "https://www.ticketmaster.com/club-level-seating-babymetal-denver-colorado-09-02-2026/event/1E00648692676ECC",
+    "venue": "Ball Arena"
+  },
+  "G5vzZ_FnWOqZM": {
+    "date": "2026-09-23",
+    "name": "Killswitch Engage",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:30:00",
+    "url": "https://www.ticketmaster.com/killswitch-engage-denver-colorado-09-23-2026/event/1E00648ABD81D037",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_G3prJzF": {
+    "date": "2026-11-21",
+    "name": "Underoath - Define the Great Line 20th Anniversary Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:30:00",
+    "url": "https://www.ticketmaster.com/underoath-define-the-great-line-20th-denver-colorado-11-21-2026/event/1E0064C4967A6E08",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_GE8FcjX": {
+    "date": "2026-10-05",
+    "name": "Archers",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/archers-denver-colorado-10-05-2026/event/1E0064C9D022D73E",
+    "venue": "Marquis"
+  },
+  "G5vzZ_GEv-Guf": {
+    "date": "2026-09-18",
+    "name": "Polyphia Tour MMXXVI  ",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketmaster.com/polyphia-tour-mmxxvi-denver-colorado-09-18-2026/event/1E0064C9C184C354",
+    "venue": "JUNKYARD"
+  },
+  "G5vzZ_GVIKec2": {
+    "date": "2026-10-22",
+    "name": "Ceremony",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/ceremony-denver-colorado-10-22-2026/event/1E0064CD284C2B4F",
+    "venue": "Marquis"
+  },
+  "G5vzZ_GYb6_yP": {
+    "date": "2026-08-22",
+    "name": "Fighting the Phoenix",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/fighting-the-phoenix-denver-colorado-08-22-2026/event/1E0064CC181D9E65",
+    "venue": "Marquis"
+  },
+  "G5vzZ_Gmp_Mzu": {
+    "date": "2026-12-03",
+    "name": "Imminence: North America 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/imminence-north-america-2026-denver-colorado-12-03-2026/event/1E0064CB96677E0D",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_aLgdiAh": {
+    "date": "2026-10-01",
+    "name": "Dying Fetus x Sanguisugabogg",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "17:30:00",
+    "url": "https://www.ticketmaster.com/dying-fetus-x-sanguisugabogg-denver-colorado-10-01-2026/event/1E006497F50EC15B",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_aexByha": {
+    "date": "2026-12-03",
+    "name": "Decibel - Metal & Beer Festival: 3-DAY PASS (Pre-Fest at Ratio)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": null,
+    "url": "https://www.ticketmaster.com/decibel-metal-beer-festival-3day-pass-denver-colorado-12-03-2026/event/1E006490A2EB96C9",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_aexQt9c": {
+    "date": "2026-12-04",
+    "name": "Decibel - Metal & Beer Festival: 2-DAY PASS",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": null,
+    "url": "https://www.ticketmaster.com/decibel-metal-beer-festival-2day-pass-denver-colorado-12-04-2026/event/1E006490A26A95ED",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_ahIYrEK": {
+    "date": "2026-10-06",
+    "name": "Loathe: A Stranger to You",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/loathe-a-stranger-to-you-denver-colorado-10-06-2026/event/1E006496E8C1E9D3",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_eL9IFFB": {
+    "date": "2026-08-21",
+    "name": "Diggy Graves - The No Vacancy Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/diggy-graves-the-no-vacancy-tour-denver-colorado-08-21-2026/event/1E006427D7A0823A",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_kHh0LuJ": {
+    "date": "2026-08-29",
+    "name": "LIL WAYNE: 20 YEARS OF CARTER CLASSICS",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketmaster.com/lil-wayne-20-years-of-carter-denver-colorado-08-29-2026/event/1E00646F1B91F366",
+    "venue": "JUNKYARD"
+  },
+  "G5vzZ_kwp3UTN": {
+    "date": "2026-07-30",
+    "name": "CHIODOS: ITS NOT YOU, ITS ME TOUR",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/chiodos-its-not-you-its-me-denver-colorado-07-30-2026/event/1E00646C964B6FE3",
+    "venue": "Fillmore Auditorium (Denver)"
+  },
+  "G5vzZ_uCDFhs7": {
+    "date": "2026-08-29",
+    "name": "FEM&M X ASTRID - EMO GIRLS VS RAVE GIRLS",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/femm-x-astrid-emo-girls-vs-denver-colorado-08-29-2026/event/1E0064D3BB21BC44",
+    "venue": "Marquis"
+  },
+  "G5vzZ_uEjVVBz": {
+    "date": "2026-11-12",
+    "name": "Agriculture",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/agriculture-denver-colorado-11-12-2026/event/1E0064D9DCD34EB8",
+    "venue": "Marquis"
+  },
+  "G5vzZ_udVjCjg": {
+    "date": "2026-11-28",
+    "name": "Senses Fail Presents Still Searching",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/senses-fail-presents-still-searching-denver-colorado-11-28-2026/event/1E0064D0F470E735",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_uiwbd5z": {
+    "date": "2026-10-10",
+    "name": "Twiztid - Certified Psychos Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/twiztid-certified-psychos-tour-denver-colorado-10-10-2026/event/1E0064DB326032F8",
+    "venue": "Summit Music Hall"
+  },
+  "G5vzZ_unyOJeF": {
+    "date": "2026-09-18",
+    "name": "Pallbearer",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/pallbearer-denver-colorado-09-18-2026/event/1E0064DAB9826088",
+    "venue": "Marquis"
+  },
+  "G5vzZbUpm3JUT": {
+    "date": "2026-11-11",
+    "name": "Three Days Grace - Alienation Tour ",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/three-days-grace-alienation-tour-denver-colorado-11-11-2026/event/1E006365AE4A6DBF",
+    "venue": "Ball Arena"
+  },
+  "G5vzZbgTZM63W": {
+    "date": "2026-07-28",
+    "name": "AC/DC - POWER UP TOUR 2026 ",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/acdc-power-up-tour-2026-denver-colorado-07-28-2026/event/1E00635FC0DC74BD",
+    "venue": "Empower Field At Mile High"
+  },
+  "G5vzZbzCNsztx": {
+    "date": "2026-08-23",
+    "name": "Avenged Sevenfold and Good Charlotte: North American Tour 2026",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/avenged-sevenfold-and-good-charlotte-north-denver-colorado-08-23-2026/event/1E006383A3C78A62",
+    "venue": "Ball Arena"
+  },
+  "G5vzZbzJ9-4Pi": {
+    "date": "2026-08-23",
+    "name": "Club Level Seating: Avenged Sevenfold And Good Charlotte",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.ticketmaster.com/club-level-seating-avenged-sevenfold-and-denver-colorado-08-23-2026/event/1E0063899785596C",
+    "venue": "Ball Arena"
+  },
+  "Z7r9jZ1A7-O0S": {
+    "date": "2026-08-07",
+    "name": "Tomahawk w/ The Melvins",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7-O0S",
+    "venue": "Ogden Theatre"
+  },
+  "Z7r9jZ1A70Af7": {
+    "date": "2026-11-12",
+    "name": "GWAR (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A70Af7",
+    "venue": "Ogden Theatre"
+  },
+  "Z7r9jZ1A70IjO": {
+    "date": "2026-10-23",
+    "name": "SiM",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A70IjO",
+    "venue": "Oriental Theatre-CO"
+  },
+  "Z7r9jZ1A70d0y": {
+    "date": "2026-08-28",
+    "name": "The Sword and Red Fang (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A70d0y",
+    "venue": "Mission Ballroom"
+  },
+  "Z7r9jZ1A7P-of": {
+    "date": "2026-12-01",
+    "name": "Whitechapel (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7P-of",
+    "venue": "Ogden Theatre"
+  },
+  "Z7r9jZ1A7P3f4": {
+    "date": "2026-08-07",
+    "name": "The Cybertronic Spree w/ Spaceman Bob",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7P3f4",
+    "venue": "Cervantes Other Side"
+  },
+  "Z7r9jZ1A7PP4a": {
+    "date": "2026-09-16",
+    "name": "Sleep (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7PP4a",
+    "venue": "Ogden Theatre"
+  },
+  "Z7r9jZ1A7Pg_Y": {
+    "date": "2026-09-19",
+    "name": "Pallbearer",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pg_Y",
+    "venue": "Slowdown"
+  },
+  "Z7r9jZ1A7Pw4I": {
+    "date": "2026-09-29",
+    "name": "Hammerfall w/ Evergrey",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pw4I",
+    "venue": "The Federal Theatre"
+  },
+  "Z7r9jZ1A7Pw4S": {
+    "date": "2026-11-01",
+    "name": "Metalachi",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pw4S",
+    "venue": "The Federal Theatre"
+  },
+  "Z7r9jZ1A7Pw4V": {
+    "date": "2026-11-08",
+    "name": "Metal Church w/ Armored Saint",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pw4V",
+    "venue": "The Federal Theatre"
+  },
+  "Z7r9jZ1A7Pw4g": {
+    "date": "2026-11-28",
+    "name": "Boston Manor w/ Ben Quad",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pw4g",
+    "venue": "The Federal Theatre"
+  },
+  "Z7r9jZ1A7Pw4s": {
+    "date": "2026-10-31",
+    "name": "Wednesday 13 w/ Dead on a Sunday",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7Pw4s",
+    "venue": "The Federal Theatre"
+  },
+  "Z7r9jZ1A7xKxA": {
+    "date": "2026-08-18",
+    "name": "Dimmu Borgir (16 and Over)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1A7xKxA",
+    "venue": "Mission Ballroom"
+  },
+  "Z7r9jZ1AAZdby": {
+    "date": "2026-12-13",
+    "name": "Trivium w/ In Flames",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:35:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1AAZdby",
+    "venue": "Mission Ballroom"
+  },
+  "rZ7HnEZ1Af-ybd": {
+    "date": "2026-10-08",
+    "name": "Wednesday 13 - Shocktober Blood Tour 2026",
+    "price": "$39.08\u2013$52.47 USD",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketweb.com/event/wednesday-13-shocktober-bourbon-theatre-tickets/14879603",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1Af-yvS": {
+    "date": "2026-12-02",
+    "name": "GWAR: Gor Gor Must Die",
+    "price": "$52.47\u2013$84.92 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/gwar-gor-gor-must-die-bourbon-theatre-tickets/14879073",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1Af0f4N": {
+    "date": "2026-09-08",
+    "name": "The Browning, Deadlands, The Crimson Armada, Blind Equation, From This Day Forward",
+    "price": "$29.81\u2013$52.47 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/the-browning-deadlands-the-crimson-bourbon-theatre-tickets/14914563",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfF8J7": {
+    "date": "2026-09-21",
+    "name": "Primer 55 - Shattered Schemes & Broken Dreams Tour",
+    "price": "$23.12 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/primer-55-shattered-bourbon-theatre-tickets/14210984",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfFZJf": {
+    "date": "2026-10-09",
+    "name": "Psychostick, Spiral, Hatricide, Unthroned",
+    "price": "$28.27\u2013$52.47 USD",
+    "status": "onsale",
+    "time": "18:50:00",
+    "url": "https://www.ticketweb.com/event/psychostick-spiral-hatricide-unthroned-bourbon-theatre-tickets/14200994",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfFeuV": {
+    "date": "2026-11-18",
+    "name": "A Killer's Confession, Dizasterpiece, Dead Things",
+    "price": "$28.27\u2013$45.78 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/a-killers-confession-dizasterpiece-dead-bourbon-theatre-tickets/14202374",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfJ9jS": {
+    "date": "2026-09-19",
+    "name": "Cuddlebone Album Release Show",
+    "price": "$18.48 USD",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketweb.com/event/cuddlebone-album-release-show-bourbon-theatre-tickets/14997733",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfOM0N": {
+    "date": "2026-08-21",
+    "name": "The Fall of Troy, Lobby Boxer, Petty Beige, Trees With Eyes",
+    "price": "$34.96\u2013$52.47 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/the-fall-of-troy-lobby-bourbon-theatre-tickets/14837923",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfPVPd": {
+    "date": "2026-11-10",
+    "name": "The Funeral Portrait, Pinknoise, Anyone Else",
+    "price": "$27.24\u2013$165.77 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/the-funeral-portrait-pinknoise-anyone-bourbon-theatre-tickets/14974943",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfPg_S": {
+    "date": "2026-09-02",
+    "name": "Chad Gray: 30 Years of Madnesss",
+    "price": "$0.00 USD",
+    "status": "onsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketweb.com/event/chad-gray-30-years-of-bourbon-theatre-tickets/14975673",
+    "venue": "Bourbon Theatre"
+  },
+  "rZ7HnEZ1AfaPAV": {
+    "date": "2026-08-22",
+    "name": "Reggaeton Rave",
+    "price": "$0.00\u2013$14.95 USD",
+    "status": "onsale",
+    "time": "22:00:00",
+    "url": "https://www.ticketweb.com/event/reggaeton-rave-the-church-nightclub-tickets/14265174",
+    "venue": "The Church Nightclub"
+  },
+  "rZ7HnEZ1Afak-V": {
+    "date": "2026-08-29",
+    "name": "Cera Khin",
+    "price": "$24.95 USD",
+    "status": "onsale",
+    "time": "22:00:00",
+    "url": "https://www.ticketweb.com/event/cera-khin-the-basement-at-club-vinyl-tickets/14246874",
+    "venue": "The Basement at Club Vinyl"
+  },
+  "rZ7HnEZ1AfqxqS": {
+    "date": "2026-07-31",
+    "name": "Mindrott, Infuriate, River City Rejects, Criminal Neglect",
+    "price": "$13.86 USD",
+    "status": "onsale",
+    "time": "19:30:00",
+    "url": "https://www.ticketweb.com/event/mindrott-infuriate-river-city-rejects-bourbon-theatre-tickets/14762773",
+    "venue": "Bourbon Theatre"
+  },
+  "vvG1bZ_5SqsGJ6": {
+    "date": "2026-11-11",
+    "name": "Motionless In White: The Sweat and Blood Tour",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:30:00",
+    "url": "https://www.ticketmaster.com/motionless-in-white-the-sweat-and-omaha-nebraska-11-11-2026/event/060064BCDDC4C987",
+    "venue": "CHI Health Center Omaha"
+  }
+}
