@@ -1,13 +1,15 @@
 # Concert Scout
 
-A small Python 3.12 program that checks the official Ticketmaster Discovery API
-each morning and emails only new concerts or meaningful changes. It uses no AI,
-database, web scraping, server, or paid hosting.
+A reusable Python 3.12 project that checks official event sources each morning
+and emails only new concerts or meaningful changes. Fork it, edit one JSON
+profile, add four GitHub secrets, and it runs without a server, database, AI, or
+paid hosting.
 
 ## What it searches
 
-Search locations, radii, priority artists, Pandora-liked artists, and genre
-terms are all editable in `config.json`. The supplied configuration covers
+Search locations, radii, priority artists, liked artists, genres, preferred
+venues, and low-price sorting are editable in `config.json`. The supplied
+personal configuration covers
 Kearney, Lincoln, Omaha, and Denver and searches events from today through 12
 months ahead. Add artist names from Pandora to `pandora_liked_artists`; their
 concerts receive a Strong Match label.
@@ -28,26 +30,27 @@ not stop the remaining searches.
 Distances are approximate straight-line distances from Elm Creek, not driving
 distances.
 
+## Make it yours
+
+1. Fork this repository.
+2. Copy `config.example.json` over `config.json`.
+3. Edit `config.json` with your hometown, search areas, artists, and genres.
+4. Add the four GitHub secrets below.
+5. Run **Actions → Concert Scout → Run workflow**.
+
+Each optional additional person gets a separate profile JSON, state JSON, and
+recipient secret. `profiles/husband.json` demonstrates this without mixing its
+alerts or history with the default profile.
+
 ## One-time setup
 
 1. Create a free Ticketmaster developer account and Discovery API key.
 2. For the sending Gmail account, enable two-step verification and create an
    app password.
-3. Create a new GitHub repository and push this folder:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial concert scout"
-   git branch -M main
-   git remote add origin YOUR_GITHUB_REPOSITORY_URL
-   git push -u origin main
-   ```
-
-4. In GitHub, open **Settings → Secrets and variables → Actions** and add:
+3. In GitHub, open **Settings → Secrets and variables → Actions** and add:
    `TICKETMASTER_API_KEY`, `ALERT_EMAIL_FROM`, `ALERT_EMAIL_TO`, and
    `GMAIL_APP_PASSWORD`.
-5. Open **Actions → Concert Scout → Run workflow** for the first test.
+4. Open **Actions → Concert Scout → Run workflow** for the first test.
 
 The workflow has only `contents: write` permission, needed to commit its compact
 state file. Its commit includes `[skip ci]`; scheduled workflows do not trigger
@@ -86,6 +89,19 @@ set +a
 python -m pytest -q
 python concert_scout.py
 ```
+
+Run an additional profile independently:
+
+```bash
+python concert_scout.py \
+  --config profiles/husband.json \
+  --state data/seen_events_husband.json \
+  --recipient-env HUSBAND_ALERT_EMAIL_TO
+```
+
+To enable the included husband profile in GitHub, add the
+`HUSBAND_ALERT_EMAIL_TO` repository secret and set the repository variable
+`ENABLE_HUSBAND_PROFILE` to `true`. Until then, that profile is safely skipped.
 
 No email is sent when nothing has changed. If a city request fails, the other
 cities are still attempted, and secrets are never logged.

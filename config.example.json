@@ -1,0 +1,22 @@
+{
+  "profile_name": "My",
+  "home": {
+    "name": "Your hometown",
+    "latitude": 40.6997,
+    "longitude": -99.3715
+  },
+  "search_areas": [
+    {"city": "Omaha", "state_code": "NE", "radius_miles": 65, "timezone": "America/Chicago"}
+  ],
+  "priority_artists": ["Favorite Artist"],
+  "pandora_liked_artists": ["Another Artist"],
+  "strong_genre_keywords": ["neo-soul"],
+  "discovery_genre_keywords": [],
+  "preferred_venues": [],
+  "prefer_low_prices": false,
+  "official_calendars": {
+    "visit_kearney": false,
+    "lied_center": false
+  },
+  "months_ahead": 12
+}

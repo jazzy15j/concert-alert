@@ -1,6 +1,7 @@
 from concert_scout import (
     classify_event, deduplicate, exact_artist_match, is_excluded_event,
-    known_artists_in_title, normalize_artist, price_text,
+    known_artists_in_title, normalize_artist, parse_args, price_text,
+    report_sort_key, ReportEvent,
 )
 
 ARTISTS = ["Ms. Lauryn Hill", "D'Angelo", "India.Arie"]
@@ -54,3 +55,24 @@ def test_local_calendar_artist_detection_is_exact():
     assert known_artists_in_title("Jazmine Sullivan Live", ["Jazmine Sullivan"]) == ["Jazmine Sullivan"]
     assert known_artists_in_title("Jill Scott with Guests", ["Jill Scott"]) == ["Jill Scott"]
     assert known_artists_in_title("Scott Bradlee's Postmodern Jukebox", ["Jill Scott"]) == []
+
+
+def test_profile_command_line_arguments():
+    args = parse_args(["--config", "profiles/husband.json", "--state", "data/husband.json",
+                       "--recipient-env", "HUSBAND_ALERT_EMAIL_TO"])
+    assert args.config == "profiles/husband.json"
+    assert args.state == "data/husband.json"
+    assert args.recipient_env == "HUSBAND_ALERT_EMAIL_TO"
+
+
+def test_preferred_cheap_venue_sorting():
+    cheap = event("Favorite", event_id="cheap")
+    cheap["priceRanges"] = [{"min": 25, "max": 30}]
+    cheap["_embedded"]["venues"] = [{"name": "The Other Side"}]
+    expensive = event("Favorite", event_id="expensive")
+    expensive["priceRanges"] = [{"min": 100, "max": 150}]
+    expensive["_embedded"]["venues"] = [{"name": "Arena"}]
+    config = {"preferred_venues": ["The Other Side"], "prefer_low_prices": True}
+    cheap_report = ReportEvent(cheap, "MUST SEE", "", "", 10, "America/Chicago")
+    expensive_report = ReportEvent(expensive, "MUST SEE", "", "", 5, "America/Chicago")
+    assert report_sort_key(cheap_report, config) < report_sort_key(expensive_report, config)

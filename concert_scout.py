@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import html
 from html.parser import HTMLParser
 import json
@@ -25,8 +26,6 @@ from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
-CONFIG_PATH = ROOT / "config.json"
-STATE_PATH = ROOT / "data" / "seen_events.json"
 API_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
 LOG = logging.getLogger("concert_scout")
 EXCLUDED_PHRASES = (
@@ -433,7 +432,7 @@ def event_area(event: dict[str, Any], areas: list[dict[str, Any]]) -> dict[str, 
     return next((a for a in same_state if normalize_artist(a["city"]) == city), same_state[0] if same_state else areas[0])
 
 
-def render_email(reports: list[ReportEvent]) -> str:
+def render_email(reports: list[ReportEvent], profile_name: str = "") -> str:
     colors = {"MUST SEE": "#8b1e3f", "STRONG MATCH": "#305f72", "DISCOVERY": "#5c6b3c"}
     sections = []
     for label, heading in (("MUST SEE", "MUST SEE"), ("STRONG MATCH", "STRONG MATCHES"), ("DISCOVERY", "DISCOVERIES")):
@@ -463,33 +462,73 @@ def render_email(reports: list[ReportEvent]) -> str:
         if cards:
             sections.append(f"<h2 style='margin-top:28px'>{heading}</h2>{''.join(cards)}")
     return f"""<!doctype html><html><body style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#222">
-      <h1>Concert Scout</h1><p>New concerts and meaningful updates near your selected cities.</p>
+      <h1>{html.escape(profile_name + " " if profile_name else "")}Concert Scout</h1>
+      <p>New concerts and meaningful updates near your selected cities.</p>
       {''.join(sections)}
       <p style="color:#777;font-size:12px">Distances are approximate straight-line distances from Elm Creek, Nebraska.</p>
     </body></html>"""
 
 
-def send_email(reports: list[ReportEvent]) -> None:
+def send_email(reports: list[ReportEvent], recipient_env: str, profile_name: str = "") -> None:
     sender = os.environ["ALERT_EMAIL_FROM"]
-    recipient = os.environ["ALERT_EMAIL_TO"]
+    recipient = os.environ[recipient_env]
     message = EmailMessage()
     message["From"], message["To"] = sender, recipient
-    message["Subject"] = f"Concert Scout: {len(reports)} new matches — {date.today().isoformat()}"
+    prefix = f"{profile_name} " if profile_name else ""
+    message["Subject"] = f"{prefix}Concert Scout: {len(reports)} new matches — {date.today().isoformat()}"
     message.set_content("Concert Scout found new matches. View this message in an HTML-capable email client.")
-    message.add_alternative(render_email(reports), subtype="html")
+    message.add_alternative(render_email(reports, profile_name), subtype="html")
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
         smtp.login(sender, os.environ["GMAIL_APP_PASSWORD"])
         smtp.send_message(message)
 
 
-def main() -> int:
+def minimum_price(event: dict[str, Any]) -> float:
+    values = [
+        item["min"] for item in event.get("priceRanges") or []
+        if isinstance(item.get("min"), (int, float))
+    ]
+    return min(values) if values else math.inf
+
+
+def report_sort_key(report: ReportEvent, config: dict[str, Any]) -> tuple[Any, ...]:
+    rank = {"MUST SEE": 0, "STRONG MATCH": 1, "DISCOVERY": 2}
+    venue = ((report.raw.get("_embedded", {}).get("venues") or [{}])[0]).get("name", "")
+    normalized_venue = normalize_artist(venue)
+    preferred = config.get("preferred_venues", [])
+    venue_rank = 0 if any(normalize_artist(name) in normalized_venue for name in preferred) else 1
+    price = minimum_price(report.raw) if config.get("prefer_low_prices") else 0
+    return (
+        rank[report.label], venue_rank, price,
+        report.distance if report.distance is not None else 99999,
+        report.raw.get("dates", {}).get("start", {}).get("localDate", "9999"),
+    )
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Search for new concerts and email alerts.")
+    parser.add_argument("--config", default="config.json", help="Profile JSON path, relative to this project.")
+    parser.add_argument("--state", default="data/seen_events.json", help="Separate state JSON path for this profile.")
+    parser.add_argument("--recipient-env", default="ALERT_EMAIL_TO", help="Environment variable containing recipient email.")
+    return parser.parse_args(argv)
+
+
+def project_path(value: str) -> Path:
+    path = Path(value)
+    return path if path.is_absolute() else ROOT / path
+
+
+def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    args = parse_args(argv)
+    config_path = project_path(args.config)
+    state_path = project_path(args.state)
     api_key = os.environ.get("TICKETMASTER_API_KEY")
     if not api_key:
         LOG.error("TICKETMASTER_API_KEY is required")
         return 2
-    config = json.loads(CONFIG_PATH.read_text())
-    old_state = json.loads(STATE_PATH.read_text()) if STATE_PATH.exists() else {}
+    config = json.loads(config_path.read_text())
+    old_state = json.loads(state_path.read_text()) if state_path.exists() else {}
     today = date.today()
     start = datetime.combine(today, dt_time.min, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     end = datetime.combine(add_months(today, config.get("months_ahead", 12)), dt_time.max, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -543,16 +582,18 @@ def main() -> int:
             distance = None
         area = event_area(event, config["search_areas"])
         reports.append(ReportEvent(event, *classification, change, distance, area["timezone"]))
-    rank = {"MUST SEE": 0, "STRONG MATCH": 1, "DISCOVERY": 2}
-    reports.sort(key=lambda r: (rank[r.label], r.distance if r.distance is not None else 99999, r.raw.get("dates", {}).get("start", {}).get("localDate", "9999")))
+    reports.sort(key=lambda report: report_sort_key(report, config))
     if reports:
-        send_email(reports)
+        if not os.environ.get(args.recipient_env):
+            LOG.error("%s is required when matches need to be emailed", args.recipient_env)
+            return 2
+        send_email(reports, args.recipient_env, config.get("profile_name", ""))
         LOG.info("Sent %d concert alert(s)", len(reports))
     else:
         LOG.info("No new or meaningfully changed events; no email sent")
     if new_state != old_state:
-        STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        STATE_PATH.write_text(json.dumps(new_state, indent=2, sort_keys=True) + "\n")
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        state_path.write_text(json.dumps(new_state, indent=2, sort_keys=True) + "\n")
         LOG.info("Updated state")
     return 0
 
