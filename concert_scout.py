@@ -90,7 +90,7 @@ def classification_terms(event: dict[str, Any]) -> set[str]:
 def terms_match(terms: set[str], keywords: Iterable[str]) -> str | None:
     normalized_keywords = [normalize_artist(keyword) for keyword in keywords]
     return next(
-        (term for term in sorted(terms) if any(keyword in term or term in keyword for keyword in normalized_keywords)),
+        (term for term in sorted(terms) if any(keyword in term for keyword in normalized_keywords)),
         None,
     )
 

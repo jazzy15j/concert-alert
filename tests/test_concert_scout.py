@@ -1,6 +1,6 @@
 from concert_scout import (
     abc_next_data, classify_event, deduplicate, exact_artist_match, is_excluded_event,
-    known_artists_in_title, normalize_artist, parse_args, price_text,
+    known_artists_in_title, normalize_artist, parse_args, price_text, terms_match,
     report_sort_key, ReportEvent,
 )
 
@@ -54,6 +54,11 @@ def test_match_classification():
     assert classify_event(liked, ARTISTS, ["Favorite Artist"])[0] == "STRONG MATCH"
     assert classify_event(event("Reggae Artist", genre="Reggae"), ARTISTS)[0] == "DISCOVERY"
     assert classify_event(event("Unknown Indie Artist", genre="Alternative"), ARTISTS) is None
+
+
+def test_narrow_genre_does_not_match_broad_parent_genre():
+    assert terms_match({"metalcore"}, ["metalcore"]) == "metalcore"
+    assert terms_match({"metal"}, ["metalcore"]) is None
 
 
 def test_missing_price_handling():
