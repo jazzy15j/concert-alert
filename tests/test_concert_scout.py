@@ -1,5 +1,5 @@
 from concert_scout import (
-    classify_event, deduplicate, exact_artist_match, is_excluded_event,
+    abc_next_data, classify_event, deduplicate, exact_artist_match, is_excluded_event,
     known_artists_in_title, normalize_artist, parse_args, price_text,
     report_sort_key, ReportEvent,
 )
@@ -25,6 +25,15 @@ def test_artist_name_normalization():
 def test_exact_artist_matching():
     assert exact_artist_match(["Guest", "MS. LAURYN HILL"], ARTISTS) == "Ms. Lauryn Hill"
     assert exact_artist_match(["Lauryn Hill Experience"], ARTISTS) is None
+
+
+def test_abc_next_data_extraction():
+    page = (
+        '<html><script id="__NEXT_DATA__" type="application/json">'
+        '{"props":{"artist":"Closure &amp; Friends"}}'
+        "</script></html>"
+    )
+    assert abc_next_data(page)["props"]["artist"] == "Closure & Friends"
 
 
 def test_tribute_act_exclusion():

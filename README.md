@@ -11,8 +11,9 @@ Search locations, radii, priority artists, liked artists, genres, preferred
 venues, and low-price sorting are editable in `config.json`. The supplied
 personal configuration covers
 Kearney, Lincoln, Omaha, and Denver and searches events from today through 12
-months ahead. Add artist names from Pandora to `pandora_liked_artists`; their
-concerts receive a Strong Match label.
+months ahead. Add artist names from any music service to
+`pandora_liked_artists` (the legacy setting name); their concerts receive a
+Strong Match label.
 
 Ticketmaster results are deduplicated by their stable event ID, filtered to
 remove obvious non-concert/add-on/tribute listings, classified, sorted, and
@@ -26,6 +27,12 @@ The scout also reads two official local calendars: Visit Kearney's public
 calendar API (including The Other Side listings) and the Lied Center's public
 events calendar in Lincoln. These sources are isolated adapters and failures do
 not stop the remaining searches.
+
+The supplied husband profile also reads the exact artists in the latest
+official ABC triple j Unearthed **In The Pit** episode tracklist. This updates
+automatically when the Tuesday show publishes a new episode. Those names are
+treated as liked artists, not broad genre matches, and a temporary ABC failure
+does not stop the rest of the scout.
 
 Distances are approximate straight-line distances from Elm Creek, not driving
 distances.
@@ -41,7 +48,7 @@ distances.
 Each additional person gets a separate profile JSON and state JSON, so their
 matches and history do not mix with yours. `profiles/husband.json` demonstrates
 this while reusing the already-configured recipient email. His messages have a
-separate **Metal & Hardcore Concert Scout** subject, making them easy to
+separate **Metalcore Concert Scout** subject, making them easy to
 recognize and forward.
 
 ## One-time setup

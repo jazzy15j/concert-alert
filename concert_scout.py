@@ -27,6 +27,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
 API_URL = "https://app.ticketmaster.com/discovery/v2/events.json"
+IN_THE_PIT_URL = "https://www.abc.net.au/triplejunearthed/programs/in-the-pit"
 LOG = logging.getLogger("concert_scout")
 EXCLUDED_PHRASES = (
     "tribute to", "a tribute", "impersonator", "parking", "vip package",
@@ -94,6 +95,38 @@ def terms_match(terms: set[str], keywords: Iterable[str]) -> str | None:
     )
 
 
+def abc_next_data(page: str) -> dict[str, Any]:
+    """Extract ABC's public page data without depending on its visual markup."""
+    match = re.search(
+        r'<script id="__NEXT_DATA__" type="application/json">(.*?)</script>',
+        page,
+        flags=re.DOTALL,
+    )
+    if not match:
+        raise ValueError("ABC page did not contain its public episode data")
+    return json.loads(html.unescape(match.group(1)))
+
+
+class TripleJInThePitSource:
+    """Read exact artists from the latest official In The Pit tracklist."""
+
+    def __init__(self, timeout: int = 20):
+        self.timeout = timeout
+
+    def _page(self, url: str) -> str:
+        request = Request(url, headers={"User-Agent": "concert-scout/1.0"})
+        with urlopen(request, timeout=self.timeout) as response:
+            return response.read().decode("utf-8")
+
+    def latest_artists(self) -> list[str]:
+        program = abc_next_data(self._page(IN_THE_PIT_URL))
+        latest = program["props"]["pageProps"]["latestEpisodePrepared"]["items"][0]
+        episode_url = urljoin(IN_THE_PIT_URL, latest["articleLink"])
+        episode = abc_next_data(self._page(episode_url))
+        tracks = episode["props"]["pageProps"]["data"]["documentProps"]["tracklistPrepared"]["items"]
+        return list(dict.fromkeys(track["artist"].strip() for track in tracks if track.get("artist")))
+
+
 def classify_event(
     event: dict[str, Any],
     priority_artists: Iterable[str],
@@ -106,7 +139,7 @@ def classify_event(
         return "MUST SEE", f"Priority artist match: {artist}"
     liked_artist = exact_artist_match(event_names(event), pandora_liked_artists)
     if liked_artist:
-        return "STRONG MATCH", f"Artist from your Pandora likes: {liked_artist}"
+        return "STRONG MATCH", f"Artist from your liked music: {liked_artist}"
     terms = classification_terms(event)
     strong_match = terms_match(terms, strong_genres)
     if strong_match:
@@ -541,7 +574,16 @@ def main(argv: list[str] | None = None) -> int:
                 found.extend(source.search_artist(artist, area, start, end))
         except Exception as exc:
             LOG.error("Search failed for %s; continuing: %s", area["city"], exc)
-    all_artists = list(dict.fromkeys(config["priority_artists"] + config.get("pandora_liked_artists", [])))
+    liked_artists = list(config.get("pandora_liked_artists", []))
+    artist_feeds = config.get("artist_feeds", {})
+    if artist_feeds.get("triple_j_in_the_pit"):
+        try:
+            feed_artists = TripleJInThePitSource().latest_artists()
+            liked_artists = list(dict.fromkeys(liked_artists + feed_artists))
+            LOG.info("Loaded %d artists from the latest ABC In The Pit tracklist", len(feed_artists))
+        except Exception as exc:
+            LOG.error("ABC In The Pit artist feed failed; continuing: %s", exc)
+    all_artists = list(dict.fromkeys(config["priority_artists"] + liked_artists))
     calendars = config.get("official_calendars", {})
     if calendars.get("visit_kearney"):
         try:
@@ -562,7 +604,7 @@ def main(argv: list[str] | None = None) -> int:
         classification = classify_event(
             event,
             config["priority_artists"],
-            config.get("pandora_liked_artists", []),
+            liked_artists,
             config.get("strong_genre_keywords", []),
             config.get("discovery_genre_keywords", []),
         )
