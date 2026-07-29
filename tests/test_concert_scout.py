@@ -1,6 +1,7 @@
 from concert_scout import (
     abc_next_data, classify_event, deduplicate, exact_artist_match, is_excluded_event,
-    known_artists_in_title, normalize_artist, parse_args, price_text, terms_match,
+    known_artists_in_title, normalize_artist, parse_args, price_text, render_email,
+    terms_match,
     report_sort_key, ReportEvent,
 )
 
@@ -59,6 +60,15 @@ def test_match_classification():
 def test_narrow_genre_does_not_match_broad_parent_genre():
     assert terms_match({"metalcore"}, ["metalcore"]) == "metalcore"
     assert terms_match({"metal"}, ["metalcore"]) is None
+
+
+def test_discovered_music_is_rendered_without_concerts():
+    rendered = render_email([], "Metalcore", [{
+        "artist": "Closure", "title": "Unravel", "url": "https://example.com/closure",
+    }])
+    assert "MUSIC DISCOVERED FROM IN THE PIT" in rendered
+    assert "Closure" in rendered
+    assert "Unravel" in rendered
 
 
 def test_missing_price_handling():

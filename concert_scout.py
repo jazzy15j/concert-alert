@@ -118,13 +118,24 @@ class TripleJInThePitSource:
         with urlopen(request, timeout=self.timeout) as response:
             return response.read().decode("utf-8")
 
-    def latest_artists(self) -> list[str]:
+    def latest_tracks(self) -> list[dict[str, str]]:
         program = abc_next_data(self._page(IN_THE_PIT_URL))
         latest = program["props"]["pageProps"]["latestEpisodePrepared"]["items"][0]
         episode_url = urljoin(IN_THE_PIT_URL, latest["articleLink"])
         episode = abc_next_data(self._page(episode_url))
         tracks = episode["props"]["pageProps"]["data"]["documentProps"]["tracklistPrepared"]["items"]
-        return list(dict.fromkeys(track["artist"].strip() for track in tracks if track.get("artist")))
+        return [
+            {
+                "artist": track["artist"].strip(),
+                "title": track.get("title", "").strip(),
+                "url": track.get("unearthedUrl") or track.get("youTubeUrl") or episode_url,
+            }
+            for track in tracks
+            if track.get("artist")
+        ]
+
+    def latest_artists(self) -> list[str]:
+        return list(dict.fromkeys(track["artist"] for track in self.latest_tracks()))
 
 
 def classify_event(
@@ -465,7 +476,11 @@ def event_area(event: dict[str, Any], areas: list[dict[str, Any]]) -> dict[str, 
     return next((a for a in same_state if normalize_artist(a["city"]) == city), same_state[0] if same_state else areas[0])
 
 
-def render_email(reports: list[ReportEvent], profile_name: str = "") -> str:
+def render_email(
+    reports: list[ReportEvent],
+    profile_name: str = "",
+    discovered_tracks: list[dict[str, str]] | None = None,
+) -> str:
     colors = {"MUST SEE": "#8b1e3f", "STRONG MATCH": "#305f72", "DISCOVERY": "#5c6b3c"}
     sections = []
     for label, heading in (("MUST SEE", "MUST SEE"), ("STRONG MATCH", "STRONG MATCHES"), ("DISCOVERY", "DISCOVERIES")):
@@ -494,23 +509,45 @@ def render_email(reports: list[ReportEvent], profile_name: str = "") -> str:
               </div>""")
         if cards:
             sections.append(f"<h2 style='margin-top:28px'>{heading}</h2>{''.join(cards)}")
+    tracks_section = ""
+    if discovered_tracks:
+        rows = "".join(
+            f"""<li style="margin:8px 0">
+              <a href="{html.escape(track["url"], quote=True)}"><b>{html.escape(track["artist"])}</b> — {html.escape(track["title"])}</a>
+            </li>"""
+            for track in discovered_tracks
+        )
+        tracks_section = f"""
+          <h2 style="margin-top:28px">MUSIC DISCOVERED FROM IN THE PIT</h2>
+          <p>The complete tracklist from the newest Tuesday episode. These artists are also used for nearby concert matching.</p>
+          <ol>{rows}</ol>"""
     return f"""<!doctype html><html><body style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#222">
       <h1>{html.escape(profile_name + " " if profile_name else "")}Concert Scout</h1>
       <p>New concerts and meaningful updates near your selected cities.</p>
       {''.join(sections)}
+      {tracks_section}
       <p style="color:#777;font-size:12px">Distances are approximate straight-line distances from Elm Creek, Nebraska.</p>
     </body></html>"""
 
 
-def send_email(reports: list[ReportEvent], recipient_env: str, profile_name: str = "") -> None:
+def send_email(
+    reports: list[ReportEvent],
+    recipient_env: str,
+    profile_name: str = "",
+    discovered_tracks: list[dict[str, str]] | None = None,
+) -> None:
     sender = os.environ["ALERT_EMAIL_FROM"]
     recipient = os.environ[recipient_env]
     message = EmailMessage()
     message["From"], message["To"] = sender, recipient
     prefix = f"{profile_name} " if profile_name else ""
-    message["Subject"] = f"{prefix}Concert Scout: {len(reports)} new matches — {date.today().isoformat()}"
-    message.set_content("Concert Scout found new matches. View this message in an HTML-capable email client.")
-    message.add_alternative(render_email(reports, profile_name), subtype="html")
+    track_count = len(discovered_tracks or [])
+    summary = f"{len(reports)} new concerts"
+    if track_count:
+        summary += f" + {track_count} new playlist tracks"
+    message["Subject"] = f"{prefix}Concert Scout: {summary} — {date.today().isoformat()}"
+    message.set_content("Concert Scout found new concerts or playlist music. View this message in an HTML-capable email client.")
+    message.add_alternative(render_email(reports, profile_name, discovered_tracks), subtype="html")
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
         smtp.login(sender, os.environ["GMAIL_APP_PASSWORD"])
         smtp.send_message(message)
@@ -562,6 +599,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     config = json.loads(config_path.read_text())
     old_state = json.loads(state_path.read_text()) if state_path.exists() else {}
+    new_state = dict(old_state)
     today = date.today()
     start = datetime.combine(today, dt_time.min, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     end = datetime.combine(add_months(today, config.get("months_ahead", 12)), dt_time.max, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -575,12 +613,19 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:
             LOG.error("Search failed for %s; continuing: %s", area["city"], exc)
     liked_artists = list(config.get("pandora_liked_artists", []))
+    discovered_tracks: list[dict[str, str]] = []
+    playlist_changed = False
     artist_feeds = config.get("artist_feeds", {})
     if artist_feeds.get("triple_j_in_the_pit"):
         try:
-            feed_artists = TripleJInThePitSource().latest_artists()
+            discovered_tracks = TripleJInThePitSource().latest_tracks()
+            feed_artists = list(dict.fromkeys(track["artist"] for track in discovered_tracks))
             liked_artists = list(dict.fromkeys(liked_artists + feed_artists))
             LOG.info("Loaded %d artists from the latest ABC In The Pit tracklist", len(feed_artists))
+            feed_snapshot = [f'{track["artist"]} — {track["title"]}' for track in discovered_tracks]
+            previous_feed = old_state.get("__artist_feeds__", {}).get("triple_j_in_the_pit")
+            playlist_changed = previous_feed != feed_snapshot
+            new_state["__artist_feeds__"] = {"triple_j_in_the_pit": feed_snapshot}
         except Exception as exc:
             LOG.error("ABC In The Pit artist feed failed; continuing: %s", exc)
     all_artists = list(dict.fromkeys(config["priority_artists"] + liked_artists))
@@ -596,7 +641,6 @@ def main(argv: list[str] | None = None) -> int:
         except Exception as exc:
             LOG.error("Lied Center calendar failed; continuing: %s", exc)
     reports: list[ReportEvent] = []
-    new_state = dict(old_state)
     home = config["home"]
     for event in deduplicate(found):
         if is_excluded_event(event):
@@ -625,12 +669,21 @@ def main(argv: list[str] | None = None) -> int:
         area = event_area(event, config["search_areas"])
         reports.append(ReportEvent(event, *classification, change, distance, area["timezone"]))
     reports.sort(key=lambda report: report_sort_key(report, config))
-    if reports:
+    if reports or playlist_changed:
         if not os.environ.get(args.recipient_env):
             LOG.error("%s is required when matches need to be emailed", args.recipient_env)
             return 2
-        send_email(reports, args.recipient_env, config.get("profile_name", ""))
-        LOG.info("Sent %d concert alert(s)", len(reports))
+        send_email(
+            reports,
+            args.recipient_env,
+            config.get("profile_name", ""),
+            discovered_tracks if playlist_changed else [],
+        )
+        LOG.info(
+            "Sent %d concert alert(s) and %d newly published playlist track(s)",
+            len(reports),
+            len(discovered_tracks) if playlist_changed else 0,
+        )
     else:
         LOG.info("No new or meaningfully changed events; no email sent")
     if new_state != old_state:

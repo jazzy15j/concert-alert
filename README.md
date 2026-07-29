@@ -32,7 +32,9 @@ The supplied husband profile also reads the exact artists in the latest
 official ABC triple j Unearthed **In The Pit** episode tracklist. This updates
 automatically when the Tuesday show publishes a new episode. Those names are
 treated as liked artists, not broad genre matches, and a temporary ABC failure
-does not stop the rest of the scout.
+does not stop the rest of the scout. When a new episode appears, his email also
+includes its complete linked tracklist—even when an artist has no nearby
+concert. That music section is sent once per new playlist rather than daily.
 
 Distances are approximate straight-line distances from Elm Creek, not driving
 distances.
