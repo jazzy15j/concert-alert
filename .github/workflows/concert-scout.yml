@@ -2,8 +2,8 @@ name: Concert Scout
 
 on:
   schedule:
-    # 13:00 UTC is 8:00 AM Central Daylight Time and 7:00 AM Central Standard Time.
-    - cron: "0 13 * * *"
+    # Runs every Monday at 13:00 UTC (8:00 AM CDT / 7:00 AM CST).
+    - cron: "0 13 * * 1"
   workflow_dispatch:
     inputs:
       run_husband:
