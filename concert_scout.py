@@ -476,9 +476,8 @@ def event_area(event: dict[str, Any], areas: list[dict[str, Any]]) -> dict[str, 
     return next((a for a in same_state if normalize_artist(a["city"]) == city), same_state[0] if same_state else areas[0])
 
 
-def render_email(
+def render_body(
     reports: list[ReportEvent],
-    profile_name: str = "",
     discovered_tracks: list[dict[str, str]] | None = None,
 ) -> str:
     colors = {"MUST SEE": "#8b1e3f", "STRONG MATCH": "#305f72", "DISCOVERY": "#5c6b3c"}
@@ -521,13 +520,63 @@ def render_email(
           <h2 style="margin-top:28px">MUSIC DISCOVERED FROM IN THE PIT</h2>
           <p>The complete tracklist from the newest Tuesday episode. These artists are also used for nearby concert matching.</p>
           <ol>{rows}</ol>"""
+    return "".join(sections) + tracks_section
+
+
+def render_email(
+    reports: list[ReportEvent],
+    profile_name: str = "",
+    discovered_tracks: list[dict[str, str]] | None = None,
+) -> str:
     return f"""<!doctype html><html><body style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#222">
       <h1>{html.escape(profile_name + " " if profile_name else "")}Concert Scout</h1>
       <p>New concerts and meaningful updates near your selected cities.</p>
-      {''.join(sections)}
-      {tracks_section}
+      {render_body(reports, discovered_tracks)}
       <p style="color:#777;font-size:12px">Distances are approximate straight-line distances from Elm Creek, Nebraska.</p>
     </body></html>"""
+
+
+@dataclass
+class ProfileResult:
+    name: str
+    reports: list[ReportEvent]
+    tracks: list[dict[str, str]]
+    state_path: Path
+    old_state: dict[str, Any]
+    new_state: dict[str, Any]
+
+
+def render_digest(results: list[ProfileResult]) -> str:
+    sections = "".join(
+        f"""<h1 style="margin-top:36px;border-bottom:2px solid #222;padding-bottom:6px">{html.escape(r.name or "Concert Scout")}</h1>
+        {render_body(r.reports, r.tracks)}"""
+        for r in results
+        if r.reports or r.tracks
+    )
+    return f"""<!doctype html><html><body style="font-family:Arial,sans-serif;max-width:720px;margin:auto;color:#222">
+      <h1>Concert Scout</h1>
+      <p>New concerts and meaningful updates, grouped by person.</p>
+      {sections}
+      <p style="color:#777;font-size:12px">Distances are approximate straight-line distances from Elm Creek, Nebraska.</p>
+    </body></html>"""
+
+
+def send_digest(results: list[ProfileResult], recipient_env: str) -> None:
+    sender = os.environ["ALERT_EMAIL_FROM"]
+    message = EmailMessage()
+    message["From"], message["To"] = sender, os.environ[recipient_env]
+    concerts = sum(len(r.reports) for r in results)
+    tracks = sum(len(r.tracks) for r in results)
+    summary = f"{concerts} new concerts"
+    if tracks:
+        summary += f" + {tracks} new playlist tracks"
+    names = " & ".join(r.name for r in results if (r.reports or r.tracks) and r.name)
+    message["Subject"] = f"Concert Scout{' (' + names + ')' if names else ''}: {summary} — {date.today().isoformat()}"
+    message.set_content("Concert Scout found new concerts or playlist music. View this message in an HTML-capable email client.")
+    message.add_alternative(render_digest(results), subtype="html")
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
+        smtp.login(sender, os.environ["GMAIL_APP_PASSWORD"])
+        smtp.send_message(message)
 
 
 def send_email(
@@ -579,6 +628,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Search for new concerts and email alerts.")
     parser.add_argument("--config", default="config.json", help="Profile JSON path, relative to this project.")
     parser.add_argument("--state", default="data/seen_events.json", help="Separate state JSON path for this profile.")
+    parser.add_argument("--also", action="append", default=[], metavar="CONFIG:STATE",
+                        help="Add another profile (config.json:state.json) to ONE combined email. Repeatable.")
     parser.add_argument("--recipient-env", default="ALERT_EMAIL_TO", help="Environment variable containing recipient email.")
     return parser.parse_args(argv)
 
@@ -588,15 +639,7 @@ def project_path(value: str) -> Path:
     return path if path.is_absolute() else ROOT / path
 
 
-def main(argv: list[str] | None = None) -> int:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    args = parse_args(argv)
-    config_path = project_path(args.config)
-    state_path = project_path(args.state)
-    api_key = os.environ.get("TICKETMASTER_API_KEY")
-    if not api_key:
-        LOG.error("TICKETMASTER_API_KEY is required")
-        return 2
+def scout_profile(api_key: str, config_path: Path, state_path: Path) -> ProfileResult:
     config = json.loads(config_path.read_text())
     old_state = json.loads(state_path.read_text()) if state_path.exists() else {}
     new_state = dict(old_state)
@@ -669,27 +712,50 @@ def main(argv: list[str] | None = None) -> int:
         area = event_area(event, config["search_areas"])
         reports.append(ReportEvent(event, *classification, change, distance, area["timezone"]))
     reports.sort(key=lambda report: report_sort_key(report, config))
-    if reports or playlist_changed:
+    return ProfileResult(
+        config.get("profile_name", ""),
+        reports,
+        discovered_tracks if playlist_changed else [],
+        state_path,
+        old_state,
+        new_state,
+    )
+
+
+def write_state(result: ProfileResult) -> None:
+    if result.new_state != result.old_state:
+        result.state_path.parent.mkdir(parents=True, exist_ok=True)
+        result.state_path.write_text(json.dumps(result.new_state, indent=2, sort_keys=True) + "\n")
+        LOG.info("Updated state for %s", result.state_path.name)
+
+
+def main(argv: list[str] | None = None) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    args = parse_args(argv)
+    api_key = os.environ.get("TICKETMASTER_API_KEY")
+    if not api_key:
+        LOG.error("TICKETMASTER_API_KEY is required")
+        return 2
+    pairs = [(args.config, args.state)] + [tuple(item.split(":", 1)) for item in args.also]
+    results = [scout_profile(api_key, project_path(c), project_path(st)) for c, st in pairs]
+    if any(r.reports or r.tracks for r in results):
         if not os.environ.get(args.recipient_env):
             LOG.error("%s is required when matches need to be emailed", args.recipient_env)
             return 2
-        send_email(
-            reports,
-            args.recipient_env,
-            config.get("profile_name", ""),
-            discovered_tracks if playlist_changed else [],
-        )
+        if args.also:
+            send_digest(results, args.recipient_env)
+        else:
+            only = results[0]
+            send_email(only.reports, args.recipient_env, only.name, only.tracks)
         LOG.info(
             "Sent %d concert alert(s) and %d newly published playlist track(s)",
-            len(reports),
-            len(discovered_tracks) if playlist_changed else 0,
+            sum(len(r.reports) for r in results),
+            sum(len(r.tracks) for r in results),
         )
     else:
         LOG.info("No new or meaningfully changed events; no email sent")
-    if new_state != old_state:
-        state_path.parent.mkdir(parents=True, exist_ok=True)
-        state_path.write_text(json.dumps(new_state, indent=2, sort_keys=True) + "\n")
-        LOG.info("Updated state")
+    for result in results:
+        write_state(result)
     return 0
 
 

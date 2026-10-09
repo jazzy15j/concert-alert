@@ -100,3 +100,16 @@ def test_preferred_cheap_venue_sorting():
     cheap_report = ReportEvent(cheap, "MUST SEE", "", "", 10, "America/Chicago")
     expensive_report = ReportEvent(expensive, "MUST SEE", "", "", 5, "America/Chicago")
     assert report_sort_key(cheap_report, config) < report_sort_key(expensive_report, config)
+
+
+def test_digest_groups_profiles_and_skips_empty_ones():
+    from pathlib import Path
+    from concert_scout import ProfileResult, render_digest
+    tracks = [{"artist": "Band", "title": "Song", "url": "https://example.com"}]
+    results = [
+        ProfileResult("Jasmine", [], [], Path("a.json"), {}, {}),
+        ProfileResult("Metalcore", [], tracks, Path("b.json"), {}, {}),
+    ]
+    rendered = render_digest(results)
+    assert "Metalcore" in rendered and "Band" in rendered
+    assert "Jasmine" not in rendered

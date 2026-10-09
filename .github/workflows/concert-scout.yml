@@ -5,12 +5,6 @@ on:
     # Runs every Monday at 13:00 UTC (8:00 AM CDT / 7:00 AM CST).
     - cron: "0 13 * * 1"
   workflow_dispatch:
-    inputs:
-      run_husband:
-        description: "Also run the separate Metalcore profile"
-        required: false
-        type: boolean
-        default: true
 
 permissions:
   contents: write
@@ -35,15 +29,7 @@ jobs:
         run: python -m pip install --disable-pip-version-check pytest
       - name: Run tests
         run: python -m pytest -q
-      - name: Search and send alerts
-        env:
-          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
-          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
-          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-        run: python concert_scout.py
-      - name: Search husband profile
-        if: ${{ github.event_name == 'schedule' || inputs.run_husband }}
+      - name: Search and send one combined alert
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
           ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
@@ -51,9 +37,7 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: >-
           python concert_scout.py
-          --config profiles/husband.json
-          --state data/seen_events_husband.json
-          --recipient-env ALERT_EMAIL_TO
+          --also profiles/husband.json:data/seen_events_husband.json
       - name: Commit updated event state
         run: |
           if git diff --quiet -- data/; then

@@ -1,14 +1,35 @@
 {
+  "profile_name": "Jasmine",
   "home": {
     "name": "Elm Creek, Nebraska",
     "latitude": 40.6997,
     "longitude": -99.3715
   },
   "search_areas": [
-    {"city": "Kearney", "state_code": "NE", "radius_miles": 75, "timezone": "America/Chicago"},
-    {"city": "Lincoln", "state_code": "NE", "radius_miles": 65, "timezone": "America/Chicago"},
-    {"city": "Omaha", "state_code": "NE", "radius_miles": 65, "timezone": "America/Chicago"},
-    {"city": "Denver", "state_code": "CO", "radius_miles": 100, "timezone": "America/Denver"}
+    {
+      "city": "Kearney",
+      "state_code": "NE",
+      "radius_miles": 75,
+      "timezone": "America/Chicago"
+    },
+    {
+      "city": "Lincoln",
+      "state_code": "NE",
+      "radius_miles": 65,
+      "timezone": "America/Chicago"
+    },
+    {
+      "city": "Omaha",
+      "state_code": "NE",
+      "radius_miles": 65,
+      "timezone": "America/Chicago"
+    },
+    {
+      "city": "Denver",
+      "state_code": "CO",
+      "radius_miles": 100,
+      "timezone": "America/Denver"
+    }
   ],
   "priority_artists": [
     "2Pac",
@@ -57,11 +78,28 @@
     "Kindred the Family Soul",
     "Lalah Hathaway",
     "Leela James",
-    "Sade"
+    "Sade",
+    "The Red Clay Strays",
+    "Mark Ronson",
+    "RAYE",
+    "Corinne Bailey Rae",
+    "Nancy Sinatra",
+    "Santana",
+    "Jessie Murph",
+    "Teddy Swims",
+    "The Womack Sisters"
   ],
   "pandora_liked_artists": [],
-  "strong_genre_keywords": ["neo-soul"],
-  "discovery_genre_keywords": [],
+  "strong_genre_keywords": [
+    "neo-soul",
+    "soul"
+  ],
+  "discovery_genre_keywords": [
+    "r&b",
+    "southern rock",
+    "blues",
+    "funk"
+  ],
   "official_calendars": {
     "visit_kearney": true,
     "lied_center": true
