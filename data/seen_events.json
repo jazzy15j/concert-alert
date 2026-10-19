@@ -183,10 +183,19 @@
     "date": "2027-04-05",
     "name": "Ayra Starr: Starrgirl World Tour",
     "price": "Price not published",
-    "status": "offsale",
+    "status": "onsale",
     "time": "19:00:00",
     "url": "https://www.ticketmaster.com/ayra-starr-starrgirl-world-tour-denver-colorado-04-05-2027/event/1E006548DC4ECC6A",
     "venue": "Summit Music Hall"
+  },
+  "G5vzZ_fXpk4_Y": {
+    "date": "2027-02-04",
+    "name": "Spitalfield",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:30:00",
+    "url": "https://www.ticketmaster.com/spitalfield-denver-colorado-02-04-2027/event/1E00654F96195670",
+    "venue": "Moon Room at Summit"
   },
   "G5vzZ_fk6Z0Rk": {
     "date": "2026-11-28",
@@ -802,6 +811,15 @@
   },
   "kearney:10138138": {
     "date": "2027-10-06",
+    "name": "Live Music Wednesday",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.facebook.com/JoysTableKearney",
+    "venue": "Joy&#8217;s Table"
+  },
+  "kearney:10138139": {
+    "date": "2027-10-13",
     "name": "Live Music Wednesday",
     "price": "Price not published",
     "status": "onsale",
