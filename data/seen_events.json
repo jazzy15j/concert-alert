@@ -350,6 +350,24 @@
     "url": "https://www.ticketmaster.com/event/Z7r9jZ1AA7bAv",
     "venue": "Mission Ballroom"
   },
+  "Z7r9jZ1AAe7Cp": {
+    "date": "2026-12-04",
+    "name": "Mark O'Connor's Appalachian Christmas",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1AAe7Cp",
+    "venue": "Holiday Theater - MCA Denver"
+  },
+  "Z7r9jZ1AAe_7V": {
+    "date": "2027-02-18",
+    "name": "North Mississippi Allstars (16+ Event)",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketmaster.com/event/Z7r9jZ1AAe_7V",
+    "venue": "Bluebird Theatre"
+  },
   "Z7r9jZ1AAeaGy": {
     "date": "2026-12-11",
     "name": "Bob Moses (18+ Event)",
@@ -829,6 +847,24 @@
   },
   "kearney:10138139": {
     "date": "2027-10-13",
+    "name": "Live Music Wednesday",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.facebook.com/JoysTableKearney",
+    "venue": "Joy&#8217;s Table"
+  },
+  "kearney:10138140": {
+    "date": "2027-10-20",
+    "name": "Live Music Wednesday",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.facebook.com/JoysTableKearney",
+    "venue": "Joy&#8217;s Table"
+  },
+  "kearney:10138141": {
+    "date": "2027-10-27",
     "name": "Live Music Wednesday",
     "price": "Price not published",
     "status": "onsale",
