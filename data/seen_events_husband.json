@@ -44,6 +44,15 @@
     "url": "https://www.ticketmaster.com/no-hope-in-hell-tour-featuring-denver-colorado-02-10-2027/event/1E006523889A5E5A",
     "venue": "Marquis"
   },
+  "G5vzZ_4DqWFds": {
+    "date": "2027-02-23",
+    "name": "Caskets",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:30:00",
+    "url": "https://www.ticketmaster.com/caskets-denver-colorado-02-23-2027/event/1E00655EDDF480F1",
+    "venue": "Summit Music Hall"
+  },
   "G5vzZ_52GYqPQ": {
     "date": "2026-11-02",
     "name": "Periphery - A Pale White Dot US Tour",
@@ -190,27 +199,25 @@
   },
   "__artist_feeds__": {
     "triple_j_in_the_pit": [
-      "Reliqa \u2014 Serum",
-      "Down And Out \u2014 Buried Alive",
-      "Teens \u2014 Untitled Too",
-      "Feel The Pain \u2014 THE MESSAGE",
-      "MATAHARI \u2014 Mirage",
-      "Violent Conflict \u2014 Merge with the Blade",
-      "Future Static \u2014 Waterworks",
-      "Heartline \u2014 All Aboard",
-      "Drift \u2014 The Truth In You",
-      "Darcy Baker \u2014 Deep End",
-      "Sage \u2014 You Live A Lie",
-      "Major Arcana \u2014 Bloom",
+      "jan. \u2014 the meaning of grace",
+      "Slaughter The Soul \u2014 A Dissertation On Cowardice",
+      "xiao xiao \u2014 Virtual Lover",
+      "CHAPEL HILL \u2014 Cherry Wrist",
+      "Facelift \u2014 Vertigo",
+      "Liasis \u2014 Dedicated to Gary",
+      "Spouse \u2014 Wishing On Numbers",
+      "Paraphernalia \u2014 King & Country",
+      "Sorrowstate \u2014 No More Dead Friends [Ft. Scott Middlin]",
+      "Broken Earth \u2014 I Let It Find Me",
+      "CHEZ \u2014 Consequences",
       "All Of Our Goodbyes \u2014 As The Light Fades",
-      "Dreamspeed \u2014 Inverse Shadows",
-      "Parades \u2014 HeartRacer",
-      "Sick Visor \u2014 '06 Camry",
-      "Special Features \u2014 Fun!",
-      "Zuko \u2014 Primal Rage",
-      "ILLAN KAAPAN \u2014 THE RISING TIDE",
-      "The Points \u2014 Taste of Defeat",
-      "prahanstation \u2014 Harder than you'd think"
+      "The Points \u2014 Benadryl",
+      "Elision \u2014 Critical Mass [Ft. Chris Mackertich]",
+      "Failsafe \u2014 In My Hands",
+      "Great Job! \u2014 SUCK",
+      "Late 90s \u2014 Can You Feel?",
+      "GOETHE \u2014 Devout Pace",
+      "Molly Rocket \u2014 Buzz Box"
     ]
   },
   "kearney:200776": {

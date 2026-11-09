@@ -215,6 +215,15 @@
     "url": "https://thefederaltheatre.holdmyticket.com/tickets/466394",
     "venue": "The Federal Theatre"
   },
+  "G5vzZ_p2o8PKu": {
+    "date": "2027-04-20",
+    "name": "Midnight Generation - Rooted Tour 2027",
+    "price": "Price not published",
+    "status": "offsale",
+    "time": "19:00:00",
+    "url": "https://www.ticketmaster.com/midnight-generation-rooted-tour-2027-denver-colorado-04-20-2027/event/1E006563D14254CD",
+    "venue": "Summit Music Hall"
+  },
   "G5vzZ_u1mS_gk": {
     "date": "2026-09-24",
     "name": "Erykah Badu",
@@ -872,6 +881,15 @@
     "url": "https://www.facebook.com/JoysTableKearney",
     "venue": "Joy&#8217;s Table"
   },
+  "kearney:10138142": {
+    "date": "2027-11-03",
+    "name": "Live Music Wednesday",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "18:00:00",
+    "url": "https://www.facebook.com/JoysTableKearney",
+    "venue": "Joy&#8217;s Table"
+  },
   "kearney:192402": {
     "date": "2026-10-13",
     "name": "Kearney Symphony Orchestra  \u2013 \u201cThings that go bump in the night\u201d",
@@ -1015,6 +1033,33 @@
     "time": "21:00:00",
     "url": "https://www.facebook.com/events/1291204660750636/",
     "venue": "Joe&#8217;s Honky-Tonk"
+  },
+  "kearney:202382": {
+    "date": "2026-11-15",
+    "name": "Big Life Adventures presents B-SHOC",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "16:00:00",
+    "url": "https://merrymancenter.org/events/b-shoc/",
+    "venue": "Merryman Performing Arts Center"
+  },
+  "kearney:202672": {
+    "date": "2026-11-19",
+    "name": "Holiday Open House at Steinbrink\u2019s",
+    "price": "Price not published",
+    "status": "onsale",
+    "time": "16:00:00",
+    "url": "https://www.facebook.com/events/1640828890882114",
+    "venue": "Steinbrink Landscaping &#038; Greenhouses"
+  },
+  "rZ7HnEZ1Af8KuV": {
+    "date": "2027-04-30",
+    "name": "TWRP: The ACTION SEQUENCE TOUR",
+    "price": "$39.08\u2013$119.42 USD",
+    "status": "onsale",
+    "time": "20:00:00",
+    "url": "https://www.ticketweb.com/event/twrp-the-action-sequence-tour-bourbon-theatre-tickets/14413374",
+    "venue": "Bourbon Theatre"
   },
   "rZ7HnEZ1AfFoA0": {
     "date": "2026-11-07",
